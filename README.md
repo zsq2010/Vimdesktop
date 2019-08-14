@@ -8,7 +8,8 @@ VimDesktop 的前身是 linxinhong 的 [ViATc
 再之后 linxinhong 又将其升级为 [VimDesktop 2](http://git.oschina.net/linxinhong/VimDesktop)，2版本的核心文件和1版本相比改动较大，配置文件格式也有所不同。
 
 目前 linxinhong 将主要精力放在 [QuickZ](http://git.oschina.net/linxinhong/QuickZ) 上， VimDesktop 2 已有较长时间没有更新。
-### **什么是VimDesktop BoBO版？**
+### **什么是[VimDesktop BoBO版？](https://github.com/BoBOVFX/Vimdesktop_BoBO/releases)**
+#### **[>>下载安装](https://github.com/BoBOVFX/Vimdesktop_BoBO/releases)**
 VimDesktop BoBO版是我以kawvin 大神版为母版进行二次开发，主要开发图像图像工作,内置一些Pipeline&Tools.
 
 **在使用方面，无论何时何地只要打包带走就可立即使用，绿色无污染！**
@@ -16,7 +17,7 @@ VimDesktop BoBO版是我以kawvin 大神版为母版进行二次开发，主要�
 目前已支持**AfterEffect|Photoshop|3DsMax|Unity**！
 
 ####
-请升级到最新版本**[Vimdesktop版本3.5.6.01](https://github.com/BoBOVFX/Vimdesktop_BoBO/releases)，否则不能正常工作！
+请升级到最新版本 **[Vimdesktop版本3.5.6.01](https://github.com/BoBOVFX/Vimdesktop_BoBO/releases)**,否则不能正常工作！
 ####
 如果想**捐赠**，捐赠了也没用，但后续会赠予超强【F1】模式！目前只有AE版后续如有需求在开发！
 
