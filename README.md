@@ -10,6 +10,10 @@ VimDesktop BoBO版是我以kawvin 大神版为母版进行二次开发，主要�
 
 ####
 请升级到最新版本 **[Vimdesktop版本3.5.6.02](https://github.com/BoBOVFX/Vimdesktop_BoBO/releases)**,否则不能正常工作！
+#### 如何安装
+1.>>Git/SVN 请直接https://github.com/BoBOVFX/Vimdesktop.git获取注意目录指认E:\BoBOAHK\Vimdesktop 建议使用这种方式
+
+2.[>>直接下载安装](https://github.com/BoBOVFX/Vimdesktop_BoBO/releases)
 ####
 如果想**捐赠**，捐赠了也没用，但后续会赠予超强【F1】模式！目前只有AE版后续如有需求在开发！
 
