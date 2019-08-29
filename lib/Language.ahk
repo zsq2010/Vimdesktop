@@ -19,6 +19,10 @@ If Language=CN
     global _AeUpdating="正在更新AfterEffect..."
     global _MaxUpdating="正在更新3DsMax..."
     global _HotKeyManagement="热键管理"
+    global _aboutMe="关于我"
+    global _BackupRestore="备份还原Vimd.ini"
+    
+    
 
     global _StartUp="开机自启"
     global _Config="配置快捷键"
