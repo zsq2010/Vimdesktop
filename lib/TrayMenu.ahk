@@ -115,14 +115,14 @@ d = (%A_YYYY%_%A_MM%_%A_DD%_%A_Hour%%A_Min%%A_Sec%)
 ; 执行备份文件
 FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_备份_%d%.ini ,1
 ; 执行备份文件2
-MsgBox "FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_备份_还原.ini ,1
-Sleep, 100
+FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_备份_还原.ini ,1
+Sleep, 1000
 ; 开始运行更新工具
 run, %A_ScriptDir%\updata.exe
-Sleep, 500
+Sleep, 2000
 ; 查看更新日志
 Run, https://github.com/BoBOVFX/Vimdesktop
-Sleep, 500
+Sleep, 2000
 Exitapp
 return
 
