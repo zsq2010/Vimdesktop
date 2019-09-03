@@ -5,6 +5,7 @@
 1Windows/Update=%systemroot%\system32\wuapp.exe
 -=
 2Desktop/=submenu
+2Desktop/Vivaldi=D:\Program\Vivaldi Browser\MyVivaldi.exe
 2Desktop/GoogleChrome=%bobodir%\GoogleChrome\chrome.exe;--force-dark-mode --disable-gpu --disable-software-rasterize
 2Desktop/Cent Browser=%bobodir%\centbrowser\MyCent.exe;--force-dark-mode --disable-gpu --disable-software-rasterize
 2Desktop/XMind ZEN=%bobodir%\XMind ZEN\XMind ZEN.exe

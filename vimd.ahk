@@ -33,6 +33,7 @@ SendMode Input
 ListLines Off
 ;Suspend, on
 SetStoreCapslockMode, off
+
 ; 
 ;
 ;
@@ -48,6 +49,7 @@ SleepTime=1000
 color1=004073
 color2=004073
 color3=007310
+color4=303030
 
 
 ; FileCreateDir,%AppDataLocal%\Vimdesktop
@@ -64,8 +66,9 @@ color3=007310
 
 ; ----------------------------------
 #Include %A_ScriptDir%\lib\checkUser.ahk
-#Include %A_ScriptDir%\lib\Download.ahk
+#Include %A_ScriptDir%\lib\DownloadFile.ahk
 #Include %A_ScriptDir%\lib\AutoExecute.ahk
+#Include %A_ScriptDir%\lib\AutoUpdate.ahk
 #Include %A_ScriptDir%\lib\FunBoBO.ahk
 #Include %A_ScriptDir%\lib\TrayMenu.ahk
 #Include %A_ScriptDir%\core\Main.ahk

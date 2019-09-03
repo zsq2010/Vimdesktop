@@ -25,12 +25,12 @@ Photoshop:
 
 ;normal模式
     vim.SetMode("normal", "Photoshop")
-    vim.map("<insert>","<Photoshop_InsertMode>","Photoshop")
+    vim.map("<insert>","<Photoshop_SwithMode>","Photoshop")
 ;insert模式
     ;载入自定义注释
     #Include %A_ScriptDir%\plugins\Photoshop\PhotoshopComment.ahk 
     vim.SetMode("insert", "Photoshop")
-    vim.Map("<esc>", "<Photoshop_NormalMode>", "Photoshop")
+    vim.Map("<insert>", "<Photoshop_SwithMode>", "Photoshop")
 
     vim.Map("q", "<PS_Duplicate_画笔橡皮擦涂抹>", "Photoshop")
     vim.Map("w", "<PS_OneKeyDefault>", "Photoshop")
@@ -40,45 +40,51 @@ Photoshop:
 
     vim.Map("m", "<PS_选区切换>", "Photoshop")
     vim.Map("l", "<PS_多边选区切换>", "Photoshop")
-    vim.Map("b", "<PS_工笔>", "Photoshop")
+    vim.Map("b", "<PS_Brush_Swith>", "Photoshop")
 
-    vim.Map("z", "<PS_Duplicate_放大镜>", "Photoshop")
-    vim.Map("x", "<PS_Duplicate_关闭>", "Photoshop")
-    vim.Map("d", "<PS_Duplicate_图层>", "Photoshop")
     vim.Map("h", "<PS_Duplicate_独立显示>", "Photoshop")
-    vim.Map("o", "<PS_Duplicate_打开保存>", "Photoshop")
-
-
-    vim.Map("c", "<PS_打开颜色面板>", "Photoshop")
-    vim.Map("g", "<PS_填充颜色>", "Photoshop")
-    
 
     vim.Map("0", "<PS_Duplicate_图层中心>", "Photoshop")
+    vim.Map("1", "<PS_Brush_Small>", "Photoshop")
+    vim.Map("2", "<PS_Brush_Big>", "Photoshop")
+    vim.Map("-", "<PS_Screen_Small>", "Photoshop")
+    vim.Map("=", "<PS_Screen_Big>", "Photoshop")
+
+
+    vim.Map("o", "<PS_Duplicate_打开保存>", "Photoshop")
+    vim.Map("d", "<PS_Duplicate_D>", "Photoshop")
+    vim.Map("n", "<PS_Double_N>", "Photoshop")
+    vim.Map("x", "<PS_Duplicate_X>", "Photoshop")
+
+    vim.Map("c", "<PS_Double_C>", "Photoshop")
+    vim.Map("3", "<PS_暗颜色>", "Photoshop")
+    vim.Map("4", "<PS_明颜色>", "Photoshop")
+    vim.Map("5", "<PS_加暗加亮>", "Photoshop")
+    
+
     vim.Map("<F2>", "<PS_切换标签>", "Photoshop")
-    vim.Map("<F3>", "<PS_明颜色>", "Photoshop")
-    vim.Map("<F4>", "<PS_暗颜色>", "Photoshop")
+    vim.Map("<F7>", "<PS_创建新文档>", "Photoshop")
 
     vim.Map("<F8>1", "<PS_Remove_AllEmptyLayer>", "Photoshop")
     vim.Map("<F8>2", "<PS_Remove_AllInvisibleHiddenLayers>", "Photoshop")
     vim.Map("<F8>3", "<PS_Script_RotateMe>", "Photoshop")
     vim.Map("<F8>4", "<PS_Script_TransformEach>", "Photoshop") 
-
-    vim.Map("vn", "<PS_创建新文档>", "Photoshop")
-    vim.Map("vc", "<PS_创建新图层>", "Photoshop")
-    vim.Map("vv", "<PS_发送V>", "Photoshop")
     vim.Map("<SP-n>", "<PS_Script_LayersRenamer>", "Photoshop")
     vim.Map("<SP-w>", "<PS_层上>", "Photoshop")
     vim.Map("<SP-s>", "<PS_层下>", "Photoshop")
-    vim.Map("<SP-q>", "<PS_透明度加>", "Photoshop")
-    vim.Map("<SP-e>", "<PS_透明度减>", "Photoshop")
-    vim.Map("<SP-3>", "<PS_Brush_Big>", "Photoshop")
-    vim.Map("<SP-2>", "<PS_Eraser>", "Photoshop")
-    vim.Map("<SP-1>", "<PS_Brush_Small>", "Photoshop")
+    vim.Map("<SP-q>", "<PS_透明度减>", "Photoshop")
+    vim.Map("<SP-e>", "<PS_透明度加>", "Photoshop")
+
+
     vim.Map("<SP-i>", "<PS_Help>", "Photoshop")
     vim.map("?","<ShowHelp>","Photoshop")
 
+    vim.Map("/u", "<PS_AutoUpdate>", "Photoshop")
+    
+
     
     vim.Map("<LB-d>", "<PS_向下合并>", "Photoshop")
+
 
     vim.BeforeActionDo("Photoshop_CheckMode", "Photoshop") ; by Array
 return
@@ -142,16 +148,49 @@ PSCheckInput()
     tClass := ini.ahk_class_Config.PSClass
     FunBoBO_RunActivation(ExePath,tClass)
  Return
+
+ <Photoshop_SwithMode>:
+;   单键切换
+        if PS_Swith_var=2 ;
+        PS_Swith_var=0
+        PS_Swith_var+=1
+        AEE_var=0
+        if (PS_Swith_var=1 )
+        {    
+            GoSub,<Photoshop_NormalMode>
+            return
+        }
+        if (PS_Swith_var=2)
+        {
+            GoSub,<Photoshop_InsertMode>
+            return
+        }
+return
+
 <Photoshop_NormalMode>:
 ;   send,{esc}
-    vim.SetMode("normal", "Photoshop")
-    MsgBox, 0, 提示, 【正常模式】, 0.5
+    vim.SetMode("normal", "AfterEffects")
+    Gui,Ae_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
+    Gui,Ae_insert: Color, %color4%
+    Gui,Ae_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
+    Gui,Ae_insert: Add, Text, ,%_ExitVIMMode%
+    Gui,Ae_insert: Show,AutoSize Center NoActivate
+    WinSet, Transparent,200
+    sleep %SleepTime%
+    Gui,Ae_insert: Destroy
 return
 
 <Photoshop_InsertMode>:
 ;   send,{esc}
-    vim.SetMode("insert", "Photoshop")
-    MsgBox, 0, 提示, 【VIM模式s】, 0.5
+    vim.SetMode("insert", "AfterEffects")
+    Gui,Ae_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
+    Gui,Ae_insert: Color, %color2%
+    Gui,Ae_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
+    Gui,Ae_insert: Add, Text, ,%_VIMMode%
+    Gui,Ae_insert: Show,AutoSize Center NoActivate
+    WinSet, Transparent,200
+    sleep %SleepTime%
+    Gui,Ae_insert: Destroy
 return
 ;辅助帮助显示
 <PS_Help>:
@@ -159,6 +198,44 @@ FunBoBO_ShowLayout("psHelp1.png")
 KeyWait i
 FunBoBO_HideLayout()
 return
+
+
+<PS_Double_N>:
+{
+; return
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, ps_tappedkey_n, %t%
+    if (t == "off")
+    goto ps_double_n
+    return
+    ps_tappedkey_n:
+        {
+            ; 创建新图层
+            app:=ComObjCreate("Photoshop.Application")
+            alert=
+            (
+                %A_ScriptDir%\custom\ps_script\NewLayer.jsx
+            )
+            app.DoJavaScriptFile(alert)
+            return
+        }
+    return
+
+    ps_double_n:
+        {
+            ; 创建新文件
+            ; app:=ComObjCreate("Photoshop.Application")
+            ; alert=
+            ; (
+            ;     %A_ScriptDir%\custom\ps_script\NewFile.jsx
+            ; )
+            ; app.DoJavaScriptFile(alert)
+            Send,^{n}
+            return
+        }
+    return
+}
+
 
 ; ^#l::MouseClick,WheelDown,,,10,0,D,R
 ; ^#h::MouseClick,WheelUp,,,10,0,D,R
@@ -173,8 +250,6 @@ return
         
         return
     }
-    ; Wait for 'd' to be pressed down again (o1ption "d")
-    ; But timeout after T0.5 seconds (If DoubleClickTime is 500)
     KeyWait, F2, % "d T"DoubleClickTime/1000
     If ! Errorlevel
     {
@@ -243,61 +318,42 @@ return
     app.DoJavaScriptFile(alert)
 return
 }
-<PS_打开颜色面板>:
+<PS_Double_C>:
 {
-    DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-    ; Wait for 'd' to be released
-    KeyWait, c
-    if (A_TimeSinceThisHotkey > DoubleClickTime) {
-        send {c}
-        return
-    }
-    ; Wait for 'd' to be pressed down again (o1ption "d")
-    ; But timeout after T0.5 seconds (If DoubleClickTime is 500)
-    KeyWait, c, % "d T"DoubleClickTime/1000
-    If ! Errorlevel
-    {
-        app:=ComObjCreate("Photoshop.Application")
-        alert=
-        (
-            %A_ScriptDir%\custom\ps_script\打开颜色面板.jsx
-        )
-        app.DoJavaScriptFile(alert)
-        return
-    }
-    else
-    {
-        send {h}
-        return
-    }
 
-return
-}
-<PS_填充颜色>:
-{
-    DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-    ; Wait for 'd' to be released
-    KeyWait, g
-    if (A_TimeSinceThisHotkey > DoubleClickTime) {
-        
-        return
-    }
-    ; Wait for 'd' to be pressed down again (o1ption "d")
-    ; But timeout after T0.5 seconds (If DoubleClickTime is 500)
-    KeyWait, g, % "d T"DoubleClickTime/1000
-    If ! Errorlevel
-    {
-        send !{Delete}
-        return
-    }
-    else
-    {
-        send {g}
-        return
-    }
+    ; return
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, ps_tappedkey_c, %t%
+    if (t == "off")
+    goto ps_double_c
+    return
+    ps_tappedkey_c:
+        {
+            ; 创建新图层
+            app:=ComObjCreate("Photoshop.Application")
+            alert=
+            (
+                %A_ScriptDir%\custom\ps_script\打开颜色面板.jsx
+            )
+            app.DoJavaScriptFile(alert)
+            return
+        }
+    return
 
-return
+    ps_double_c:
+        {
+            send !{Delete}
+            return
+        }
+    return
 }
+<PS_SwithColor>:
+    WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
+    tool_pathandname = "%activePath%"
+    KeyWait, LButton
+    msgbox Hello
+    send, x
+return
 <ps_test2>:
 {
     if var=3 ; 总共几次 
@@ -369,58 +425,46 @@ return
 
 <PS_Duplicate_画笔橡皮擦涂抹>:
         ; 单按切换画笔和橡皮檫|双按涂抹|长按未指定
-    DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-    ; Wait for 'd' to be released
-    KeyWait, q
-    if (A_TimeSinceThisHotkey > DoubleClickTime) {
-        msgbox,未绑定
-        return
-    }
-    ; Wait for 'd' to be pressed down again (option "d")
-    ; But timeout after T0.5 seconds (If DoubleClickTime is 500)
-   ;  KeyWait, q, % "d T"DoubleClickTime/3000
-     KeyWait, q, % "d T"DoubleClickTime/2000
-    If ! Errorlevel
-    {
-        app:=ComObjCreate("Photoshop.Application")
-        alert=
-        (
-            %A_ScriptDir%\custom\ps_script\smudgeTools.jsx
-        )
-        app.DoJavaScriptFile(alert)
-        return
-    }
-    else
-    {
-        if B_var=2 ; 总
-        B_var=0
-        B_var+=1
-        bo_var=0
-        if (B_var=1 )
-        {    
-            send b
-            return
-        }
-        if (B_var=2)
-        {
-            send e
-            return
-        }
-    }
+;     DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
+;     ; Wait for 'd' to be released
+;     KeyWait, q
+;     if (A_TimeSinceThisHotkey > DoubleClickTime) {
+;         msgbox,未绑定
+;         return
+;     }
+;     ; Wait for 'd' to be pressed down again (option "d")
+;     ; But timeout after T0.5 seconds (If DoubleClickTime is 500)
+;    ;  KeyWait, q, % "d T"DoubleClickTime/3000
+;      KeyWait, q, % "d T"DoubleClickTime/2000
+;     If ! Errorlevel
+;     {
+;         app:=ComObjCreate("Photoshop.Application")
+;         alert=
+;         (
+;             %A_ScriptDir%\custom\ps_script\smudgeTools.jsx
+;         )
+;         app.DoJavaScriptFile(alert)
+;         return
+;     }
+;     else
+;     {
+;         if B_var=2 ; 总
+;         B_var=0
+;         B_var+=1
+;         bo_var=0
+;         if (B_var=1 )
+;         {    
+;             send b
+;             return
+;         }
+;         if (B_var=2)
+;         {
+;             send e
+;             return
+;         }
+;     }
 return
 <PS_Duplicate_独立显示>:
-    DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-    ; Wait for 'd' to be released
-    KeyWait, h
-    if (A_TimeSinceThisHotkey > DoubleClickTime) {
-        msgbox,未绑定
-        return
-    }
-    ; Wait for 'd' to be pressed down again (o1ption "d")
-    ; But timeout after T0.5 seconds (If DoubleClickTime is 500)
-    KeyWait, h, % "d T"DoubleClickTime/1000
-    If ! Errorlevel
-    {
         app:=ComObjCreate("Photoshop.Application")
         alert=
         (
@@ -428,13 +472,6 @@ return
         )
         app.DoJavaScriptFile(alert)
         return
-    }
-    else
-    {
-        send {h}
-        return
-    }
-
 return
 
 
@@ -504,7 +541,7 @@ return
 return
 
 
-<PS_Duplicate_关闭>:
+<PS_Duplicate_X>:
     ; 单按新建图层|双按复制图层|长按删除
     DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
     ; Wait for 'd' to be released
@@ -530,21 +567,16 @@ return
 return
 
 
-<PS_Duplicate_图层>:
+<PS_Duplicate_D>:
 {
-    ; 单按新建图层|双按复制图层|长按删除
-    DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-    ; Wait for 'd' to be released
-    KeyWait, d
-    if (A_TimeSinceThisHotkey > DoubleClickTime) {
-        Send,{Delete}
-        return
-    }
-    ; Wait for 'd' to be pressed down again (option "d")
-    ; But timeout after T0.5 seconds (If DoubleClickTime is 500)
-    KeyWait, d, % "d T"DoubleClickTime/1000
-    If ! Errorlevel
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, ps_tappedkey_d, %t%
+    if (t == "off")
+    goto ps_double_d
+    return
+    ps_tappedkey_d:
         {
+            ; 创建新图层
             app:=ComObjCreate("Photoshop.Application")
             alert=
             (
@@ -552,19 +584,17 @@ return
             )
             app.DoJavaScriptFile(alert)
             return
-        }
-    else
-        {
-            app:=ComObjCreate("Photoshop.Application")
-            alert=
-            (
-            %A_ScriptDir%\custom\ps_script\NewLayer.jsx
-            )
-            app.DoJavaScriptFile(alert)
             return
         }
     return
 
+    ps_double_d:
+        {
+            ; 删除
+            Send,{Delete}
+            return
+        }
+    return
 return
 }
 
@@ -744,24 +774,137 @@ Loop
 		send {[}
 	}
 return
-
-; ; 笔刷大 *************************************
 <PS_Brush_Big>:
 Loop
 	{
 	    sleep, 14
-		GetKeyState, state, 3, p
+		GetKeyState, state, 2, p
 		if state = u
 		break
 		if state = d
 		send {]}
+        return
 	}
+return
+; ; 画布变大变小 *************************************
+<PS_Screen_Small>:
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, ps_tappedkey_Small, %t%
+    if (t == "off")
+    goto ps_double_Small
+    return
+    ps_tappedkey_Small:
+        {
+            send, ^- ;zoom out
+            sleep 5
+            send, {ctrl up} 
+            return
+        }
+    return
+
+    ps_double_Small:
+        {
+            ; 百分百
+            send, ^{0}
+            return
+        }
+
+return
+<PS_Screen_Big>:
+; return
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, ps_tappedkey_Big, %t%
+    if (t == "off")
+    goto ps_double_Big
+    return
+    ps_tappedkey_Big:
+        {
+            ;zoom in |放大
+            send, ^= 
+            sleep 5
+            send, {ctrl up} ;I've had issues with modifier keys getting stuck
+            return
+        }
+    return
+
+    ps_double_Big:
+        {
+            ; 百分百
+            send, ^{1}
+            return
+        }
+return
+
+<PS_Brush_Swith>:
+; return
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, ps_tappedkey_BrushSwith, %t%
+    if (t == "off")
+    goto ps_double_BrushSwith
+    return
+    ps_tappedkey_BrushSwith:
+        {
+            if B_var=2 ; 总
+            B_var=0
+            B_var+=1
+            bo_var=0
+            if (B_var=1 )
+            {    
+                send b
+                return
+            }
+            if (B_var=2)
+            {
+                app:=ComObjCreate("Photoshop.Application")
+                alert=
+                (
+                    %A_ScriptDir%\custom\ps_script\smudgeTools.jsx
+                )
+                app.DoJavaScriptFile(alert)
+                return
+            }
+        }
+    return
+
+    ps_double_BrushSwith:
+        {
+            ;切换至橡皮檫
+            send {e}
+            return
+        }
 return
 ; ; 橡皮檫 >>>> *************************************
 <PS_Eraser>:
     send {e}
 return
 
+<PS_加暗加亮>:
+{
+    if Add_var=2 ; 总共几次 
+    Add_var=0
+    Add_var+=1
+
+    if (Add_var=1)
+    {
+        app:=ComObjCreate("Photoshop.Application")
+        alert=
+        (
+            %A_ScriptDir%\custom\ps_script\dodgeTool.jsx
+        )
+        app.DoJavaScriptFile(alert)
+        return
+    }
+    if (Add_var=2)
+    {
+        app:=ComObjCreate("Photoshop.Application")
+        alert=
+        (
+            %A_ScriptDir%\custom\ps_script\spongeTool.jsx
+        )
+        app.DoJavaScriptFile(alert)
+        return
+    }
+}
 ; ;按左鍵再按d | 向下合并
 
 
@@ -781,6 +924,35 @@ return
     )
     app.DoJavaScriptFile(alert)
 return
+
+<PS_AutoUpdate>:
+
+    Gui,Ps_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
+    Gui,Ps_insert: Color, %color2%
+    Gui,Ps_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
+    Gui,Ps_insert: Add, Text, ,%_AutoUpdate%
+    Gui,Ps_insert: Show,AutoSize Center NoActivate
+    WinSet, Transparent,200
+    sleep %SleepTime%
+    Gui,Ae_insert: Destroy
+    
+    ; 更新第一个文件
+    updateIntervalDays := 0
+    VERSION_REGEX := "Oi)(?<=Version )?(\d+(?:\.\d+)?)"
+    WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
+    AutoUpdate(_UrlDownloadToFILE_Photoshop_1,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
+    ; 更新第二个文件
+    sleep 5000
+    updateIntervalDays := 0
+    VERSION_REGEX := "Oi)(?<=Version )?(\d+(?:\.\d+)?)"
+    WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
+    AutoUpdate(_UrlDownloadToFILE_Photoshop_2,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
+    sleep 2000
+    Reload
+
+return
+
+
 ; ~LButton & d:: 
 ; WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
 ; tool_pathandname = "%activePath%"
@@ -795,3 +967,30 @@ return
 
 ; return
 
+; ~g::
+; {
+;     Sleep, 150
+;     GetKeyState, state, g, U
+;     IfEqual, state, U
+;     {
+;         if (A_PriorHotkey <> "~g" or A_TimeSincePriorHotkey > 400)
+;         {
+;             KeyWait, g
+;             return
+;         }
+;         Send, % ["^!{F12}","+!{F1}"][(count >= 2 || !count) ? count := 1 : ++count]
+;         return
+;     }
+;     if !GetKeyState("Space","U")
+;     {
+;         Send, g
+;         return
+;     }
+;     else
+;     {
+;         Send, ^{Numpad0}
+;         Sleep 10
+;         Send, z
+;         return
+;     }
+; }

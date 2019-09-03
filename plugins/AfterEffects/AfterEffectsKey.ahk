@@ -11,16 +11,18 @@
     vim.Map("/7", "<Ae_AllMemoryDisk>", "AfterEffects")
     vim.Map("/8", "<Ae_Help3>", "AfterEffects")
     vim.Map("/9", "<Ae_Help_Script>", "AfterEffects")
-    vim.Map("6", "<Ae_6>", "AfterEffects")
+    ;  vim.Map("6", "<Ae_6>", "AfterEffects")
     
-    
-
  ;  调用脚本
  ;  vim.Map("<>", "<Ae_ui_y>", "AfterEffects")   
 
-                 ;调用KeyBoard
  ;  vim.Map("<F4>", "<Ae_ReloadFootage>", "AfterEffects")
+    vim.Map("<F1>", "<Ae_Double_F1>", "AfterEffects") 
+    vim.Map("<F2>", "<Ae_Double_F2>", "AfterEffects")
+    vim.Map("<F3>", "<Ae_Double_F3>", "AfterEffects")
+    vim.Map("<F4>", "<Ae_Double_F4>", "AfterEffects")
     vim.Map("<F5>", "<AeSpace>", "AfterEffects") 
+    
     vim.Map("<F6>", "<AfterEffects_优化合成时间>", "AfterEffects")            ;调用KeyBoard
 ;    vim.Map("<F7>", "<Ae_Script_QuickMenu>", "AfterEffects")
     vim.Map("<F8>1", "<Ae_Script_BoboTools>", "AfterEffects")  
@@ -30,6 +32,9 @@
     vim.Map("<F8>5", "<Ae_Script_GlobalRename>", "AfterEffects")
     vim.Map("<F9>", "<Ae_Double_F9>", "AfterEffects")  
     vim.Map("<F12>", "<Ae_Script_AEProject>", "AfterEffects")
+    
+
+
 
     vim.map("[","<Ae_Double_[>","AfterEffects")
     vim.map("]","<Ae_Double_]>","AfterEffects")
@@ -44,19 +49,18 @@
     vim.Map("c", "<Ae_Double_c>", "AfterEffects")
     vim.Map("z", "<Ae_Double_z>", "AfterEffects")
     vim.Map("o", "<Ae_Double_o>", "AfterEffects")
-    vim.Map("k", "<Ae_Double_k>", "AfterEffects")
     vim.Map("y", "<Ae_Double_y>", "AfterEffects")
     vim.Map("d", "<Ae_Double_d>", "AfterEffects")
     vim.Map("n", "<Ae_Double_n>", "AfterEffects")
     vim.Map("h", "<Ae_Double_h>", "AfterEffects")
-
+    vim.Map("k", "<Ae_Double_k>", "AfterEffects")
 
     vim.Map("0", "<Ae_Double_0>", "AfterEffects")
-    vim.Map("1", "<Ae_Double_1>", "AfterEffects")
-    vim.Map("2", "<Ae_Double_2>", "AfterEffects")
+
     vim.Map("8", "<Ae_Double_8>", "AfterEffects")
     vim.Map("-", "<Ae_Double_->", "AfterEffects")
     vim.Map("=", "<Ae_Double_=>", "AfterEffects")
+    ;vim.Map("`", "<Ae_6>", "AfterEffects")
 ;Press长按类型
     vim.Map("p", "<Ae_Press_p>", "AfterEffects")
     vim.Map("s", "<Ae_Press_s>", "AfterEffects")
@@ -102,12 +106,14 @@
     vim.Map("<SP-x>", "<Ae_Script_QuickMenu>", "AfterEffects")
 
     vim.Map("<SP-s>", "<Ae_SwitchLabel>", "AfterEffects")
-
     ; vim.Map("<~LS>", "<Ae_LShift>", "AfterEffects")
     ; vim.Map("<~LC>", "<Ae_FXConsole>", "AfterEffects")
 ; Ctrl&Shift相关
     vim.Map("<Ctrl>", "<Ae_Double_Ctrl>", "AfterEffects")
     vim.Map("<Shift>", "<Ae_Double_Shift>", "AfterEffects")
+    vim.Map("<Space>", "<AeSpace>", "AfterEffects") 
     vim.Map("<C-c>", "<Ae_CopyPaste>", "AfterEffects")
-    vim.Map("<C-LButton>", "<AeSpace>", "AfterEffects")
-        ; vim.Map("<~LC>", "<Ae_LCtrl>", "AfterEffects")
+    ; vim.Map("<C-LButton>", "<AeSpace>", "AfterEffects")
+    ; vim.Map("<~LC>", "<Ae_LCtrl>", "AfterEffects")
+    ; vim.Map("<Caps-a>", "<Ae_Test>", "AfterEffects")可用组合
+

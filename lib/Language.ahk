@@ -36,6 +36,8 @@ If Language=CN
     ;Plugins_Photoshop
     global _Photoshop_OpenSave = "打开&关闭"
     global _Photoshop_NewFile ="创建新文件"
+
+    global _AutoUpdate ="正在更新插件，更新完毕自动重启脚本！"
 }
 ; if ( A_Language != "0404" and A_Language != "0804" )
 Else

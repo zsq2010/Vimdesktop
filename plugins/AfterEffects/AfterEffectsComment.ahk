@@ -7,6 +7,7 @@ IniRead, Language, vimd.ini, config, Language
 If Language=CN
 {
 ;定义注释
+    vim.Comment("<AfterEffects_SwithMode>","切换模式")
     vim.Comment("<Ae_Open>","打开")
     vim.Comment("<Ae_Save>","保存")
     vim.Comment("<Ae_SaveAs>","另存为")
@@ -29,6 +30,14 @@ If Language=CN
     vim.Comment("<Ae_Double_k>","双按_【k】_合成设置")
     vim.Comment("<Ae_Double_y>", "层(创建|设置|删除)")
     vim.Comment("<Ae_Double_d>", "粘贴|删除(长按)")
+
+    vim.Comment("<Ae_Double_h>", "隐藏|双击独立显示|长按锁定")
+    vim.Comment("<Ae_Double_n>", "创建固态层|新建合成组|长按创建调节层")
+
+    vim.Comment("<Ae_Double_F1>", "多功能F1|双按整理清理项目") 
+    vim.Comment("<Ae_Double_F2>", "上一帧|双按第一帧") 
+    vim.Comment("<Ae_Double_F3>", "下一帧|双第最后一帧") 
+    vim.Comment("<Ae_Double_F4>", "双按关闭|长按关闭所有合成") 
     vim.Comment("<Ae_Double_F9>", "渲染工具")
     
 
@@ -53,7 +62,9 @@ If Language=CN
     vim.Comment("<Ae_Help3>","vimAE帮助文档")
     vim.Comment("<Ae_Help_Script>","AEScriptHelp")
 
-    vim.Comment("<AfterEffects_优化合成时间>","按工作区设置时间")
+    vim.Comment("<AfterEffects_优化合成时间>","修剪合成时间")
+    vim.Comment("<Ae_ReplaceFootageFile2>","替换素材")
+    
 
     vim.Comment("<Ae_CopyPaste>","按单键复制双键粘贴")
     vim.Comment("<Ae_foolParent>","Ae_foolParent")
@@ -68,14 +79,27 @@ If Language=CN
     vim.Comment("<Ae_SwitchLabel>", "切换 标签|长按s删除")    
     
     
-;预设动画说明
     vim.Comment("<Ae_Preset_Ani1>","位置")
     vim.Comment("<Ae_Preset_Apply>","预设应用")
     vim.Comment("<HelpAe>","帮助")
-    vim.Comment("<AeSpace>","空格")
+    vim.Comment("<AeSpace>","播放")
     vim.Comment("<Ae_ProjectCleaner>","项目清理")
     vim.Comment("<Ae_ReloadFootage>","重载素材")
     vim.Comment("<Ae_Script_GlobalRename>","重命名工具")
+
+    vim.Comment("<Ae_Double_->","缩小")
+    vim.Comment("<Ae_Double_=>","缩小|双按100%显示")
+
+    vim.Comment("<Ae_Double_[>","双按 工作区缩进(左)")
+    vim.Comment("<Ae_Double_]>","双按 工作区缩进(右)")
+
+    vim.Comment("<Ae_Double_Ctrl>", "添加关键帧")
+    vim.Comment("<Ae_Double_Shift>", "切换曲线")
+
+
+    global _VIMMode:="进入VIM模式"
+    global _ExitVIMMode:="退出VIM模式"
+    global _AeVersion:="当前版本:2.0"
 }
 else
 {

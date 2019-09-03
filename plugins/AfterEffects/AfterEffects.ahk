@@ -1,8 +1,8 @@
 ﻿;Author:BoBO
-;Version:2.0
+;Version:2.1
 ;
-;####################\\\使用本脚本请在双按zz下使用，效果最佳，否则会有点影响使用///////####################
 ;更新内容
+;2019-09-02 细节优化！
 ;2019-08-28 正式提升2.0版本 优化细节 操作更舒服！
 ;2019-05-07 新增修改选择按键  选择:空格+w 手势平移:空格+w 长按
 ;2019-03-08 修复打字卡顿
@@ -39,19 +39,20 @@ AfterEffects:
     vim.SetAction("<AfterEffects_InsertMode>", "进入VIM模式")
     vim.SetWin("AfterEffects","ahk_exe","AfterFX.exe")
     vim.BeforeActionDo("AE_CheckMode", "AfterEffects")
-
+    
     #Include %A_ScriptDir%\plugins\AfterEffects\AfterEffectsComment.ahk 
     
 ;normal模式
     vim.SetMode("normal", "AfterEffects")
-    vim.map("<insert>","<AfterEffects_InsertMode>","AfterEffects")
+    ; vim.map("<insert>","<AfterEffects_InsertMode>","AfterEffects")
+    vim.Map("<insert>", "<AfterEffects_SwithMode>", "AfterEffects")
 ;insert模式
     vim.SetMode("insert", "AfterEffects")
-    vim.Map("<esc>", "<AfterEffects_NormalMode>", "AfterEffects")
+    ; vim.Map("<esc>", "<AfterEffects_NormalMode>", "AfterEffects")
+    vim.Map("<insert>", "<AfterEffects_SwithMode>", "AfterEffects")
     ;载入顺序不能兑换否则会引起不良反应
     #Include %A_ScriptDir%\plugins\AfterEffects\AfterEffectsKey.ahk
     ;#Include %A_ScriptDir%\plugins\AfterEffects\AfterEffectsPlus.ahk
-    ;#Include %A_ScriptDir%\plugins\AfterEffects\AfterEffectsFun.ahk
 
 return
 
@@ -94,16 +95,49 @@ return
     FunBoBO_RunActivation(ExePath,tClass)
  Return
 
+<AfterEffects_SwithMode>:
+;   单键切换
+        if AE_var=2 ; 总
+        AE_var=0
+        AE_var+=1
+        AEE_var=0
+        if (AE_var=1 )
+        {    
+            GoSub,<AfterEffects_NormalMode>
+            return
+        }
+        if (AE_var=2)
+        {
+            GoSub,<AfterEffects_InsertMode>
+            return
+        }
+return
+
+
 <AfterEffects_NormalMode>:
 ;   send,{esc}
     vim.SetMode("normal", "AfterEffects")
-    MsgBox, 0, 提示, 【正常模式】, 0.5
+    Gui,Ae_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
+    Gui,Ae_insert: Color, %color4%
+    Gui,Ae_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
+    Gui,Ae_insert: Add, Text, ,%_ExitVIMMode%
+    Gui,Ae_insert: Show,AutoSize Center NoActivate
+    WinSet, Transparent,200
+    sleep %SleepTime%
+    Gui,Ae_insert: Destroy
+
 return
 
 <AfterEffects_InsertMode>:
-;   send,{esc}
     vim.SetMode("insert", "AfterEffects")
-    MsgBox, 0, 提示, 【VIM模式s】, 0.5
+    Gui,Ae_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
+    Gui,Ae_insert: Color, %color2%
+    Gui,Ae_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
+    Gui,Ae_insert: Add, Text, ,%_VIMMode%
+    Gui,Ae_insert: Show,AutoSize Center NoActivate
+    WinSet, Transparent,200
+    sleep %SleepTime%
+    Gui,Ae_insert: Destroy
 return
 
 ; <Ae_Remove>:
@@ -252,51 +286,109 @@ return
         return
     } 
 }
-<Ae_Double_1>:
+<Ae_Double_F2>:
 {
-    DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-    ; Wait for 'd' to be released
-    KeyWait, 1
-    if (A_TimeSinceThisHotkey > DoubleClickTime) {
-        AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\OrganizeProjectAssets.jsxbin
-        getAeScript(AeScriptPath)
-        sleep 500
-        AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\deleteDiskCache.jsx
-        getAeScript(AeScriptPath)
-        return
-    }
-    KeyWait, 1, % "d T"DoubleClickTime/1000
-    If ! Errorlevel
-        {
-            Send, {Home}
-            return
-        }
-    else
+
+;     DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
+;     ; Wait for 'd' to be released
+;     KeyWait, F2
+;     if (A_TimeSinceThisHotkey > DoubleClickTime) {
+;         return
+;     }
+;     KeyWait, F2, % "d T"DoubleClickTime/1000
+;     If ! Errorlevel
+;         {
+;             Send, {Home}
+;             return
+;         }
+;     else
+;         {
+;             Send, {PgUp}
+;             return
+;         }
+; return
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, ae_tappedkey_F2, %t%
+    if (t == "off")
+    goto ae_double_F2
+    return
+    ae_tappedkey_F2:
         {
             Send, {PgUp}
             return
         }
-return
+    return
+
+    ae_double_F2:
+        {
+            Send, {Home}
+            return
+        }
+    return
 }
-<Ae_Double_2>:
+
+<Ae_Double_F3>:
 {
-    DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-    ; Wait for 'd' to be released
-    KeyWait, 2
-    if (A_TimeSinceThisHotkey > DoubleClickTime) {
-        ; Send,{Delete}
-        ; Click 1
-        return
-    }
-    KeyWait, 2, % "d T"DoubleClickTime/1000
-    If ! Errorlevel
+;     DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
+;     ; Wait for 'd' to be released
+;     KeyWait, F3
+;     if (A_TimeSinceThisHotkey > DoubleClickTime) {
+;         ; Send,{Delete}
+;         ; Click 1
+;         return
+;     }
+;     KeyWait, F3, % "d T"DoubleClickTime/1000
+;     If ! Errorlevel
+;         {
+;             Send, {End}
+;             return
+;         }
+;     else
+;         {
+;             Send, {PgDn}
+;             return
+;         }
+; return
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, ae_tappedkey_F3, %t%
+    if (t == "off")
+    goto ae_double_F3
+    return
+    ae_tappedkey_F3:
+        {
+            Send, {PgDn}
+            return
+        }
+    return
+
+    ae_double_F3:
         {
             Send, {End}
             return
         }
+    return     
+
+}
+
+<Ae_Double_F4>:
+{
+    DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
+    ; Wait for 'd' to be released
+    KeyWait, F4
+    if (A_TimeSinceThisHotkey > DoubleClickTime) {
+        Send,^+{w}
+        ; Click 1
+        return
+    }
+    KeyWait, F4, % "d T"DoubleClickTime/1000
+    If ! Errorlevel
+        {
+            Send, ^{w}
+            return
+        }
     else
         {
-            Send, {PgDn}
+            Send, {F4}
             return
         }
 return
@@ -507,6 +599,45 @@ return
 }
 Return
 
+
+<Ae_Double_F1>:
+    ; 单F1超级模式 双按F1优化AE
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, ae_tappedkey_F1, %t%
+    if (t == "off")
+    goto ae_double_F1
+    return
+    ae_tappedkey_F1:
+        {
+                WinActivate, ahk_exe AfterFX.exe
+                MouseGetPos, MX, MY
+                MouseX:=MX-305
+                MouseY:=MY-155 
+                Gui,Ae: Show,X%MouseX% Y%MouseY% ,NoActivate ; NoActivate avoids deactivating the currently active window.
+                ;保存当前信息
+                KeyWait,F1                              
+                Sleep, 20                                                                                              
+                IfWinActive, ahk_class AutoHotkeyGUI
+                { 
+                    Click down 
+                    Sleep, 20  
+                    Click up
+                    Sleep, 20                 
+                    Gui,Ae: Hide
+                }
+        }
+    return
+
+    ae_double_F1:
+        {
+            AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\OrganizeProjectAssets.jsxbin 
+            getAeScript(AeScriptPath)
+            sleep 500
+            AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\deleteDiskCache.jsx
+            getAeScript(AeScriptPath)
+            return
+        }
+    return
 ; Double_Q 渲染输出
 ; #if WinActive("ahk_class Qt5QWindowIcon")
 <Ae_Double_q>:
@@ -517,7 +648,7 @@ Return
         ; send, ^k
         return
     }
-    KeyWait, c, % "d T"DoubleClickTime/1000
+    KeyWait, q, % "d T"DoubleClickTime/1000
     If ! Errorlevel
         {
             send, ^m
@@ -529,18 +660,6 @@ Return
             Send {q}
             return
         }
-    ; t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
-    ; settimer, ae_tappedkey_q, %t%
-    ; if (t == "off")
-    ; goto ae_double_q
-    ; return
-
-    ; ae_tappedkey_q:
-    ; Send {q}
-    ; return
-
-    ; ae_double_q:
-    ; send, ^m
     return
 }
 Return
@@ -756,26 +875,6 @@ Return
 }
 <Ae_Double_=>:
 {
-    ; DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-    ; KeyWait, =
-    ; if (A_TimeSinceThisHotkey > DoubleClickTime) {
-    ;     ;Null Command
-    ;     return
-    ; }
-    ; KeyWait, =, % "d T"DoubleClickTime/1000
-    ; If ! Errorlevel
-    ; {       
-    ;     send, {/}
-    ;     return
-    ; }
-    ; else
-    ; {
-        send, {.}
-        return
-    ;} 
-}
-<Ae_Double_最小化>:
-{   
     t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
     settimer, ae_tappedkey_minimize, %t%
 
@@ -784,15 +883,35 @@ Return
     return
 
     ae_tappedkey_minimize:
-    Send,-
+    send, {.}
     return
 
     ae_double_minimize:
-    Send,!{Space}
-    sleep 100
-    Send,n
+    Send,{/}
+    ; sleep 100
+    ; Send,n
     return  
+    ;} 
 }
+; <Ae_Double_最小化>:
+; {   
+;     t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+;     settimer, ae_tappedkey_minimize, %t%
+
+;     if (t == "off")
+;     goto ae_double_minimize
+;     return
+
+;     ae_tappedkey_minimize:
+;     Send,-
+;     return
+
+;     ae_double_minimize:
+;     Send,!{Space}
+;     sleep 100
+;     Send,n
+;     return  
+; }
 
 <Ae_LShift>:
 WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
@@ -993,7 +1112,41 @@ return
     getAeScript(AeScriptPath)
     return
 }
-
+<Ae_AutoUpdate>:
+    Gui,Ae_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
+    Gui,Ae_insert: Color, %color2%
+    Gui,Ae_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
+    Gui,Ae_insert: Add, Text, ,%_AutoUpdate%
+    Gui,Ae_insert: Show,AutoSize Center NoActivate
+    WinSet, Transparent,200
+    sleep %SleepTime%
+    Gui,Ae_insert: Destroy
+    ; 更新第一个文件
+    updateIntervalDays := 0
+    VERSION_REGEX := "Oi)(?<=Version )?(\d+(?:\.\d+)?)"
+    WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
+    AutoUpdate(_UrlDownloadToFILE_Ae_1,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
+    ; 更新第二个文件
+    sleep 1000
+    updateIntervalDays := 0
+    VERSION_REGEX := "Oi)(?<=Version )?(\d+(?:\.\d+)?)"
+    WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
+    AutoUpdate(_UrlDownloadToFILE_Ae_2,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
+    sleep 1000
+    ; 更新第三个文件
+    updateIntervalDays := 0
+    VERSION_REGEX := "Oi)(?<=Version )?(\d+(?:\.\d+)?)"
+    WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
+    AutoUpdate(_UrlDownloadToFILE_Ae_3,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
+    sleep 1000
+    ; 更新第四个文件
+    ; updateIntervalDays := 0
+    ; VERSION_REGEX := "Oi)(?<=Version )?(\d+(?:\.\d+)?)"
+    ; WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
+    ; AutoUpdate(_UrlDownloadToFILE_Ae_4,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
+    ; sleep 1000
+    Reload
+return
 
 ; 先按鼠标在按按键
 
@@ -1191,8 +1344,8 @@ return
     send, ^{h}
     return
 }
-<Ae_6>:
-MsgBox 测试这是大窗口
+<Ae_Test>:
+MsgBox 测试
 return
 
 <Ae_UpDater>:
