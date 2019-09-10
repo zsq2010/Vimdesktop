@@ -19,7 +19,7 @@
 ;重命名大于3层 会莫名其妙新建个图层
 Photoshop:
 ;定义注释
-    global Photoshop_update_version:="1.1"
+    global Photoshop_update_version:="1.0"
 
     vim.SetAction("<Photoshop_NormalMode>", "返回正常模式")
     vim.SetAction("<Photoshop_InsertMode>", "进入VIM模式")
@@ -929,14 +929,14 @@ return
 
 <PS_AutoUpdate>:
 
-    ; Gui,Ps_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
-    ; Gui,Ps_insert: Color, %color2%
-    ; Gui,Ps_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
-    ; Gui,Ps_insert: Add, Text, ,%_AutoUpdate%
-    ; Gui,Ps_insert: Show,AutoSize Center NoActivate
-    ; WinSet, Transparent,200
-    ; sleep %SleepTime%
-    ; Gui,Ae_insert: Destroy
+    Gui,Ps_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
+    Gui,Ps_insert: Color, %color2%
+    Gui,Ps_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
+    Gui,Ps_insert: Add, Text, ,%_AutoUpdate%
+    Gui,Ps_insert: Show,AutoSize Center NoActivate
+    WinSet, Transparent,200
+    sleep %SleepTime%
+    Gui,Ae_insert: Destroy
     
     ; ; 更新第一个文件
     ; updateIntervalDays := 0
@@ -951,10 +951,14 @@ return
     ; AutoUpdate(_UrlDownloadToFILE_Photoshop_2,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
     ; sleep 2000
     ; Reload
-    URLDownloadToFile(WorkflowsPluginsDownDir "/Photoshop/Photoshop.ahk",A_ScriptDir "\plugins\Photoshop\temp_Photoshop.ahk")
+    checkUpdateFlag:=true
+	TrayTip,,检查更新中……,2,1
+
+
+    URLDownloadToFile(WorkflowsPluginsDownDir "/Photoshop/Photoshop.ahk", A_Temp "\temp_Photoshop.ahk")
 	versionReg=iS)^\t*\s*global Photoshop_update_version:="([\d\.]*)"
 
-	Loop, read, %A_ScriptDir%\plugins\Photoshop\temp_Photoshop.ahk
+	Loop, read, %A_Temp%\temp_Photoshop.ahk
 	{
 		if(RegExMatch(A_LoopReadLine,versionReg)){
 			versionStr:=RegExReplace(A_LoopReadLine,versionReg,"$1")
@@ -988,6 +992,8 @@ return
 			checkUpdateFlag:=false
 		}else if(A_DD!=01 && A_DD!=15){
 			FileDelete, %A_Temp%\temp_Photoshop.ahk
+            sleep 500
+            Reload
 		}
 	}
 return
