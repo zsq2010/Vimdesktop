@@ -1128,3 +1128,56 @@ return
 ;     SetTimer, Key_F4, -400
 ; return
 ;********************************************************
+;************全屏最大化****************************
+!Enter::
+    ifWinExist, ahk_id %FullscreenWindow%
+    {
+        if PMenu                    ; Restore the menu.
+            DllCall("SetMenu", "UInt", FullscreenWindow, "UInt", PMenu)
+        WinSet, Style, +0xC40000    ; Restore WS_CAPTION|WS_SIZEBOX.
+        WinMove,,, PX, PY, PW, PH   ; Restore position and size.
+        FullscreenWindow =
+        return
+    }
+
+    WinGet, Style, Style, A
+    if (Style & 0xC40000) != 0xC40000 ; WS_CAPTION|WS_SIZEBOX
+        return
+
+    FullscreenWindow := WinExist("A")
+    
+    WinGetPos, PX, PY, PW, PH
+    
+    ; Remove WS_CAPTION|WS_SIZEBOX.
+    WinSet, Style, -0xC40000
+    
+    PMenu := DllCall("GetMenu", "UInt", FullscreenWindow)
+    ; Remove the window's menu.
+    if PMenu
+        DllCall("SetMenu", "UInt", FullscreenWindow, "UInt", 0)
+    
+    ; Get the area of whichever monitor the window is on.
+    SysGet, m, Monitor, % ClosestMonitorTo(PX + PW//2, PY + PH//2)
+    
+    ; Size the window to fill the entire screen.
+    WinMove,,, mLeft, mTop, mRight-mLeft, mBottom-mTop
+return
+
+ClosestMonitorTo(X, Y)
+{
+    SysGet, MonitorCount, MonitorCount
+    mD = a ; All numbers are < a.
+    Loop %MonitorCount%
+    {
+        SysGet, m, Monitor, %A_Index%
+        mX := mLeft + (mRight-mLeft)//2 - X
+        mY := mTop + (mBottom-mTop)//2 - Y
+        if (D := Sqrt(mX*mX + mY*mY)) < mD
+        {
+            m := A_Index
+            mD := D
+        }
+    }
+    return m
+}
+;********************************************************

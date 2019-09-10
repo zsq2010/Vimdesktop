@@ -179,12 +179,12 @@
     vim.Comment("<TC_EXOpen>","所以资源管理器打开")      
     vim.Comment("<TC_Undo>","TC撤销")
     vim.Comment("<Tc_DoubleSpace>","进入/返回上一层") 
-    vim.Comment("<TC_FastCopy_Move>","FastCopy快速移动")
-    vim.Comment("<TC_FastCopy_Copy>","FastCopy快速复制") 
-    vim.Comment("<TC_FastCopy_Delete>","FastCopy快速删除") 
-    vim.Comment("<TC_FastCopy_DeletePNG>","FastCopy快速删除PNG")
-    vim.Comment("<TC_FastCopy_CopyInfo>","FastCopy快速复制Info&Extra..") 
-    vim.Comment("<TC_FastCopy_CopyCVT>","FastCopy快速复制CVT/SSP..")   
+    vim.Comment("<TC_TCIMG_RenAddDateTime>","末尾加日期")
+    vim.Comment("<TC_TCIMG_DirGetUp>","文件向上移动") 
+    vim.Comment("<TC_TCIMG_MoveExtensions>","按扩展名移动文件") 
+    vim.Comment("<TC_TCIMG_DirGetInputName>","移到输入文件")
+    ; vim.Comment("<TC_FastCopy_CopyInfo>","FastCopy快速复制Info&Extra..") 
+    ; vim.Comment("<TC_FastCopy_CopyCVT>","FastCopy快速复制CVT/SSP..")   
     
     
     GoSub, TCCOMMAND
@@ -203,6 +203,8 @@
     vim.map("Ar", "<TC_NewSearch>", "TCFindFile")
     vim.map("Aw", "<TC_TextSearchOpen>", "TCFindFile")
     vim.map("Aa", "<TC_TextSearch>", "TCFindFile")
+
+    
 
 
 
@@ -372,6 +374,22 @@ return
 FunBoBO_ShowLayout("74按键模板Vimd—TC.png")
 KeyWait,i
 FunBoBO_HideLayout()
+return
+
+<TC_SwitchF4>:
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, TC_tappedkey_F4, %t%
+    if (t == "off")
+    goto TC_double_F4
+    return
+
+    TC_tappedkey_F4:
+    Send, {F4}
+    return
+
+    TC_double_F4:
+    send, !{F3}
+    return
 return
 
 
@@ -4547,6 +4565,42 @@ return
 ;一键并入并行目录
 <TC_TCIMG_GoParDir>:
  Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_TCIMG_GoParDir`)"
+return
+;复制文件名（不带扩展名，去掉最后一个换行符)
+<TC_TCIMG_CopyFileNameNoExtNoEndNewline>:
+ Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_TCIMG_CopyFileNameNoExtNoEndNewline`)"
+return
+;在文件名开头加固定短语“已看”
+<TC_TCIMG_RenBeginAdd已看>:
+ Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_TCIMG_RenBeginAdd已看`)"
+return
+;清除左右面板重复的文件夹标签
+<TC_TCIMG_ClearDupTab>:
+ Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_TCIMG_ClearDupTab`)"
+return
+;关闭本窗口重复的文件夹标签
+<TC_TCIMG_CloseThisDuplicateTabs>:
+ Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_TCIMG_CloseThisDuplicateTabs`)"
+return
+;一键切换隐藏文件系列
+<TC_TCIMG_OneKeyToggleIgnoreSets>:
+ Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_TCIMG_OneKeyToggleIgnoreSets`)"
+return
+;文件名添加当前日期和时间
+<TC_TCIMG_RenAddDateTime>:
+ Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_TCIMG_RenAddDateTime`)"
+return
+;将所选对象移动到上一级,向上移动一级,并向上选择移动的对象
+<TC_TCIMG_DirGetUp>:
+ Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_TCIMG_DirGetUp`)"
+return
+;将所选对象移动到上一级,向上移动一级,并向上选择移动的对象
+<TC_TCIMG_DirGetInputName>:
+ Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_TCIMG_DirGetInputName`)"
+return
+;将所选文件移动到与扩展名对应的创建文件夹中的当前面板
+<TC_TCIMG_MoveExtensions>:
+ Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_TCIMG_MoveExtensions`)"
 return
 
 ;FastCopy快速复制CVT/SSP..

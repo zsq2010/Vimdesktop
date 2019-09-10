@@ -1,4 +1,4 @@
-AutoUpdate(FILE, mode:=0, updateIntervalDays:=7, CHANGELOG:="", iniFile:="", backupNumber:=1) {
+﻿AutoUpdate(FILE, mode:=0, updateIntervalDays:=7, CHANGELOG:="", iniFile:="", backupNumber:=1) {
 	iniFile := iniFile ? iniFile : GetNameNoExt(A_ScriptName) . ".ini"
 	VERSION_FromScript_REGEX := "Oi)(?:^|\R);\s*ver\w*\s*=?\s*(\d+(?:\.\d+)?)(?:$|\R)"
 	if NeedToCheckUpdate(mode, updateIntervalDays, iniFile) {
@@ -185,7 +185,81 @@ GetNameNoExt(FileName) {
 	SplitPath FileName,,, Extension, NameNoExt
 	Return NameNoExt
 }
+;~;[改进版URLDownloadToFile，来源于：http://ahkcn.net/thread-5658.html]
+URLDownloadToFile(URL, FilePath, Options:="", RequestHeaders:="")
+{
+	Options:=this.解析信息到对象(Options)
+	RequestHeaders:=this.解析信息到对象(RequestHeaders)
 
+	ComObjError(0) 														 		;禁用 COM 错误通告。禁用后，检查 A_LastError 的值，脚本可以实现自己的错误处理
+	WebRequest := ComObjCreate("WinHttp.WinHttpRequest.5.1")
+
+	if (Options["EnableRedirects"]<>"")							;设置是否获取跳转后的页面信息
+		WebRequest.Option(6):=Options["EnableRedirects"]
+	;proxy_setting没值时，根据Proxy值的情况智能设定是否要进行代理访问。
+	;这样的好处是多数情况下需要代理时依然只用给出代理服务器地址即可。而在已经给出代理服务器地址后，又可以很方便的对是否启用代理进行开关。
+	if (Options["proxy_setting"]="" and Options["Proxy"]<>"")
+		Options["proxy_setting"]:=2										;0表示 Proxycfg.exe 运行了且遵循 Proxycfg.exe 的设置（没运行则效果同设置为1）。1表示忽略代理直连。2表示使用代理
+	if (Options["proxy_setting"]="" and Options["Proxy"]="")
+		Options["proxy_setting"]:=1
+	;设置代理服务器。微软的代码 SetProxy() 是放在 Open() 之前的，所以我也放前面设置，以免无效
+	WebRequest.SetProxy(Options["proxy_setting"],Options["Proxy"],Options["ProxyBypassList"])
+	if (Options["Timeout"]="")											;Options["Timeout"]如果被设置为-1，并不代表无限超时，而是依然遵循SetTimeouts第4个参数设置的最大超时时间
+		WebRequest.SetTimeouts(0,60000,30000,0)			;0或-1都表示超时无限等待，正整数则表示最大超时（单位毫秒）
+	else if (Options["Timeout"]>30)									;如果超时设置大于30秒，则需要将默认的最大超时时间修改为大于30秒
+		WebRequest.SetTimeouts(0,60000,30000,Options["Timeout"]*1000)
+	else
+		WebRequest.SetTimeouts(0,60000,30000,30000)	;此为SetTimeouts的默认设置。这句可以不加，因为默认就是这样，加在这里是为了表述清晰。
+
+	WebRequest.Open("GET", URL, true)   						;true为异步获取。默认是false，龟速的根源！！！卡顿的根源！！！
+
+	;SetRequestHeader() 必须 Open() 之后才有效
+	for k, v in RequestHeaders
+	{
+		if (k="Cookie")
+		{
+			WebRequest.SetRequestHeader("Cookie","tuzi")    ;先设置一个cookie，防止出错，msdn推荐这么做
+			WebRequest.SetRequestHeader("Cookie",v)
+		}
+		WebRequest.SetRequestHeader(k,v)
+	}
+
+	Loop
+	{
+		WebRequest.Send()
+		WebRequest.WaitForResponse(-1)								;WaitForResponse方法确保获取的是完整的响应。-1表示总是使用SetTimeouts设置的超时
+
+		;获取状态码，一般status为200说明请求成功
+		this.Status:=WebRequest.Status()
+		this.StatusText:=WebRequest.StatusText()
+
+		if (Options["expected_status"]="" or Options["expected_status"]=this.Status)
+			break
+		;尝试指定次数后页面返回的状态码依旧与预期状态码不一致，则抛出错误及详细错误信息（可使用我另一个错误处理函数专门记录处理它们）
+		;即使number_of_retries为空，表达式依然成立，所以不用为number_of_retries设置初始值。
+		else if (A_Index>=Options["number_of_retries"])
+		{
+			this.extra.URL:=URL
+			this.extra.Expected_Status:=Options["expected_status"]
+			this.extra.Status:=this.Status
+			this.extra.StatusText:=this.StatusText
+			throw, Exception("经过" Options.number_of_retries "次尝试后，服务器返回状态码依旧与期望值不一致", -1, Object(this.extra))
+		}
+	}
+
+	ADO:=ComObjCreate("adodb.stream")   		;使用 adodb.stream 编码返回值。参考 http://bbs.howtoadmin.com/ThRead-814-1-1.html
+	ADO.Type:=1														;以二进制方式操作
+	ADO.Mode:=3 													;可同时进行读写
+	ADO.Open()  														;开启物件
+	ADO.Write(WebRequest.ResponseBody())    	;写入物件。注意没法将 WebRequest.ResponseBody() 存入一个变量，所以必须用这种方式写文件
+	ADO.SaveToFile(FilePath,2)   						 	;文件存在则覆盖
+	ADO.Close()
+	this.ResponseHeaders:=this.解析信息到对象(WebRequest.GetAllResponseHeaders())
+	return, 1
+}
+Check_Github(){
+	return DllCall("Wininet.dll\InternetCheckConnection", "Ptr", &lpszUrl, "UInt", 0x1, "UInt", 0x0, "Int")
+}
 /*
 AutoUpdate(FILE, mode:=0, updateIntervalDays:="", CHANGELOG:="", iniFile:="", backupNumber:=1) {
 CHANGELOG := [CHANGELOG_URL, VERSION_REGEX, WhatNew_REGEX]

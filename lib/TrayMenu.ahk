@@ -51,11 +51,13 @@ VimdRun()
 if (FirstParameter!="silent")
 {
     Gui,welcome: +LastFound +AlwaysOnTop -Caption +ToolWindow
-    Gui,welcome: Color, %color1% `n版本:%v%
-    Gui,welcome: Font,cwhite s10 wbold q5,Segoe UI
+    Gui,welcome: Color, %color1% 
+    Gui,welcome: Font,cwhite s8 wbold q5,Segoe UI
     Gui,welcome: Add, Text, ,%_Welcome%
-    Gui,welcome: Font,cwhite s20 wbold q5,Segoe UI
-    Gui,welcome: Add, Text, ,%_AppName%_%_Author%
+    Gui,welcome: Font,cwhite s50 wbold q5,Segoe UI
+    Gui,welcome: Add, Text, ,%_AppName%
+    Gui,welcome: Font,cwhite s8 wbold q5,Segoe UI
+    Gui,welcome: Add, Text, ,%_Authors%                                                        
     Gui,welcome: Font,cwhite s8 wbold q5,Segoe UI
     Gui,welcome: Show,AutoSize Center NoActivate
     WinSet, Transparent,200
@@ -118,12 +120,13 @@ FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_备份_%d%.ini ,1
 FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_备份_还原.ini ,1
 Sleep, 1000
 ; 开始运行更新工具
-run, %A_ScriptDir%\updata.exe
-Sleep, 2000
-; 查看更新日志
-Run, https://github.com/BoBOVFX/Vimdesktop
-Sleep, 2000
-Exitapp
+; run, %A_ScriptDir%\updata.exe
+; Sleep, 2000
+; ; 查看更新日志
+; Run, https://github.com/BoBOVFX/Vimdesktop
+; Sleep, 2000
+; Exitapp
+Gosub,Auto_Update
 return
 
 <VIMD_BackupRestore>:
@@ -157,7 +160,96 @@ return
 
 Exit:
 FileRemoveDir,%ProgramFilesDir%,1
-MsgBox,0x40134,Vimdesktop,%_ConfirmExit%
+MsgBox,0x40134,%_AppName%,%_ConfirmExit%
 IfMsgBox, Yes
 Exitapp
 Return
+
+Check_Update:
+	checkUpdateFlag:=true
+	TrayTip,,%_AppName%检查更新中……,2,1
+	gosub,Auto_Update
+return
+
+Auto_Update:
+	if(FileExist(A_Temp "\Vimdesktop_Update.bat"))
+		FileDelete, %A_Temp%\Vimdesktop_Update.bat
+	;[下载最新的更新脚本]
+	if(!Check_Github()){
+		lpszUrl:=githubUrl
+		WorkflowsDownDir:=lpszUrl . GithubDir
+		if(!Check_Github()){
+			TrayTip,,网络异常，无法连接网络读取最新版本文件,3,1
+			return
+		}
+	}
+	URLDownloadToFile(WorkflowsDownDir "/vimd.ahk",A_Temp "\temp_vimd.ahk")
+	versionReg=iS)^\t*\s*global Workflows_update_version:="([\d\.]*)"
+	Loop, read, %A_Temp%\temp_vimd.ahk
+	{
+		if(RegExMatch(A_LoopReadLine,versionReg)){
+			versionStr:=RegExReplace(A_LoopReadLine,versionReg,"$1")
+			break
+		}
+		if(A_LoopReadLine="404: Not Found"){
+			TrayTip,,文件下载异常，更新失败！,3,1
+			return
+		}
+	}
+	if(versionStr){
+		if(Workflows_update_version<versionStr){
+			MsgBox,33,%_AppName%检查更新,检测到%_AppName%有新版本`n`n%Workflows_update_version%`t版本更新后=>`t%versionStr%`n`n是否更新到最新版本？`n覆盖老版本文件，如有修改过RunAny.ahk请注意备份！
+			IfMsgBox Ok
+			{
+				TrayTip,,%_AppName%下载最新版本并替换老版本...,5,1
+				; gosub,Config_Update
+				URLDownloadToFile(WorkflowsDownDir "/vimd.exe",A_Temp "\temp_vimd.exe")
+				gosub,vimd_Update
+				shell := ComObjCreate("WScript.Shell")
+				shell.run(A_Temp "\vimd_Update.bat",0)
+				ExitApp
+			}
+		}else if(checkUpdateFlag){
+			FileDelete, %A_Temp%\temp_vimd.ahk
+			TrayTip,,%_AppName%已经是最新版本。,5,1
+			checkUpdateFlag:=false
+		}else if(A_DD!=01 && A_DD!=15){
+			FileDelete, %A_Temp%\temp_vimd.ahk
+		}
+	}
+return
+
+vimd_Update:
+; Run,https://github.com/hui-Zz/RunAny/wiki/RunAny版本更新历史
+TrayTip,,%_AppName%已经更新到最新版本。,5,1
+FileAppend,
+(
+@ECHO OFF & setlocal enabledelayedexpansion & TITLE vimd更新版本
+set /a x=1
+:BEGIN
+set /a x+=1
+ping -n 2 127.1>nul
+if exist "%A_Temp%\temp_vimd.ahk" `(
+  MOVE /y "%A_Temp%\temp_vimd.ahk" "%A_ScriptDir%\vimd.ahk"
+`)
+if exist "%A_Temp%\temp_vimd.exe" `(
+  MOVE /y "%A_Temp%\temp_vimd.exe" "%A_ScriptDir%\vimd.exe"
+`)
+goto INDEX
+:INDEX
+if !x! GTR 10 `(
+  exit
+`)
+if exist "%A_Temp%\temp_vimd.ahk" `(
+  goto BEGIN
+`)
+if exist "%A_Temp%\temp_vimd.exe" `(
+  if !x! EQU 5 `(
+    taskkill /f /im %A_ScriptName%
+  `)
+  goto BEGIN
+`)
+start "" "%A_ScriptDir%\%A_ScriptName%"
+exit
+),%A_Temp%\vimd_Update.bat
+return

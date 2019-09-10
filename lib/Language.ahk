@@ -6,13 +6,14 @@ IniRead, Language, vimd.ini, config, Language
 ; if (A_Language = "0804")
 If Language=CN
 {
-    global _AppName:="VimDesktop"
+    global _AppName:="Workflows"
     global _Welcome:="欢迎使用"
-    global _Author="BoBO"
-    global _Exit="退出 VIMD"
-    global _Restart="重启 VIMD"
+    global _Author:="BoBO"
+    global _Authors="BoBO(lingchuanbo@gmail.com)" 
+    global _Exit="退出 Workflows"
+    global _Restart="重启 Workflows"
     global _Path="路径配置"
-    global _Updating="正在更新 VimDesktop_BoBO魔改版"
+    global _Updating="正在更新 Workflows"
     global _Updater="更新主程序"
     global _UpdatPlugins="更新插件"
     global _UpdateCompleted="更新成功"
@@ -21,7 +22,9 @@ If Language=CN
     global _HotKeyManagement="热键管理"
     global _aboutMe="关于我"
     global _BackupRestore="备份还原Vimd.ini"
-    
+
+    global _VIMMode:="进入 Workflows"
+    global _ExitVIMMode:="退出 Workflows"
     
 
     global _StartUp="开机自启"
@@ -43,9 +46,9 @@ If Language=CN
 Else
 {
 
-    global _AppName:="VimDesktop"
+    global _AppName:="Workflows"
     global _Welcome:="Welcome Use..."
-    global _Author="BoBO"
+    global _Authors="BoBOlingchuanbo@gmail.com"
     
 
     global _MaxUpdating="Update 3DsMax..."
@@ -62,8 +65,8 @@ Else
     global _UpdateCompleted="Update Completed"
 
     global _StartUp="Start VIMD on system startup"
-    global _Config="VIMD Configure"
-    global _Help="VIMD Help"
+    global _Config="Workflows Configure"
+    global _Help="Workflows Help"
     global _Feedback="Feedback and Request"
     global _Language = "&Language"
 
@@ -72,4 +75,7 @@ Else
 
     global _Photoshop_OpenSave ="OpenSave"
     global _Photoshop_NewFile :="NewFile"
+
+    global _VIMMode:="Enter Workflows"
+    global _ExitVIMMode:="Exit Workflows"
 }

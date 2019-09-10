@@ -56,6 +56,7 @@
     vim.Map("k", "<Ae_Double_k>", "AfterEffects")
 
     vim.Map("0", "<Ae_Double_0>", "AfterEffects")
+    vim.Map("1", "<Ae_Double_1>", "AfterEffects")
 
     vim.Map("8", "<Ae_Double_8>", "AfterEffects")
     vim.Map("-", "<Ae_Double_->", "AfterEffects")
@@ -112,7 +113,7 @@
     vim.Map("<Ctrl>", "<Ae_Double_Ctrl>", "AfterEffects")
     vim.Map("<Shift>", "<Ae_Double_Shift>", "AfterEffects")
     vim.Map("<Space>", "<AeSpace>", "AfterEffects") 
-    vim.Map("<C-c>", "<Ae_CopyPaste>", "AfterEffects")
+    ;vim.Map("<C-c>", "<Ae_CopyPaste>", "AfterEffects")
     ; vim.Map("<C-LButton>", "<AeSpace>", "AfterEffects")
     ; vim.Map("<~LC>", "<Ae_LCtrl>", "AfterEffects")
     ; vim.Map("<Caps-a>", "<Ae_Test>", "AfterEffects")可用组合

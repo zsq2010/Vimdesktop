@@ -34,36 +34,41 @@ ListLines Off
 ;Suspend, on
 SetStoreCapslockMode, off
 
-; 
-;
-;
-AppName:="VimDesktop"
-_Author:="BoBO"
-v:="3.5.6.02"
+global Workflows_update_version:="3.5.6.02"
+global githubUrl:="https://raw.githubusercontent.com"
+; global giteeUrl:="https://gitee.com"
+; global RunAnyGiteeDir:="/hui-Zz/RunAny/raw/master"
+global GithubDir:="/BoBOVFX/Vimdesktop/master"
+global lpszUrl:=githubUrl
+global WorkflowsDownDir:=lpszUrl . GithubDir
+	if(A_DD=01 || A_DD=15){
+		;当天已经检查过就不再更新
+		if(FileExist(A_Temp "\temp_vimd.ahk")){
+			FileGetTime,tempMTime, %A_Temp%\temp_vimd.ahk, M  ; 获取修改时间.
+			t1 := A_Now
+			t1 -= %tempMTime%, Days
+			FormatTime,tempTimeDD,%tempMTime%,dd
+			if(t1=0 && (tempTimeDD=01 || tempTimeDD=15))
+				return
+		}
+		Gosub,Auto_Update
+	}
+
 FeedbackLink=https://www.kancloud.cn/funbobosky/vim_unity
 HelpLink=https://www.kancloud.cn/funbobosky/vim_unity
 FontSize:="30"
-SleepTime=1000
+SleepTime=1000 ; 消失时间
 
-; 颜色
+; 定义颜色
 color1=004073
 color2=004073
 color3=007310
 color4=303030
 
-
-; FileCreateDir,%AppDataLocal%\Vimdesktop
-; FileCreateDir,%ProgramFilesDir%
-; SetWorkingDir,%AppDataLocal%\Vimdesktop
-
 ; 修饰符设定
-    N1:=new UMSS("Space","2")
-    N2:=new UMSS("Capslock","2")
-    N3:=new UMSS("Tab","2")
-; 附属功能  
-; 智能跳转 
-;  Run, %A_ScriptDir%\advanced\smartJump.ahk
-
+N1:=new UMSS("Space","2")
+N2:=new UMSS("Capslock","2")
+N3:=new UMSS("Tab","2")
 ; ----------------------------------
 #Include %A_ScriptDir%\lib\checkUser.ahk
 #Include %A_ScriptDir%\lib\DownloadFile.ahk

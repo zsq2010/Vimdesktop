@@ -52,7 +52,7 @@ AfterEffects:
     vim.Map("<insert>", "<AfterEffects_SwithMode>", "AfterEffects")
     ;载入顺序不能兑换否则会引起不良反应
     #Include %A_ScriptDir%\plugins\AfterEffects\AfterEffectsKey.ahk
-    ;#Include %A_ScriptDir%\plugins\AfterEffects\AfterEffectsPlus.ahk
+    #Include %A_ScriptDir%\plugins\AfterEffects\AfterEffectsPlus.ahk
 
 return
 
@@ -602,13 +602,13 @@ Return
 
 <Ae_Double_F1>:
     ; 单F1超级模式 双按F1优化AE
-    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
-    settimer, ae_tappedkey_F1, %t%
-    if (t == "off")
-    goto ae_double_F1
-    return
-    ae_tappedkey_F1:
-        {
+    ; t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    ; settimer, ae_tappedkey_F1, %t%
+    ; if (t == "off")
+    ; goto ae_double_F1
+    ; return
+    ; ae_tappedkey_F1:
+    ;     {
                 WinActivate, ahk_exe AfterFX.exe
                 MouseGetPos, MX, MY
                 MouseX:=MX-305
@@ -625,21 +625,18 @@ Return
                     Sleep, 20                 
                     Gui,Ae: Hide
                 }
-        }
-    return
-
-    ae_double_F1:
-        {
-            AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\OrganizeProjectAssets.jsxbin 
-            getAeScript(AeScriptPath)
-            sleep 500
-            AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\deleteDiskCache.jsx
-            getAeScript(AeScriptPath)
-            return
-        }
+        ; }
     return
 ; Double_Q 渲染输出
 ; #if WinActive("ahk_class Qt5QWindowIcon")
+<Ae_Double_1>:
+    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\OrganizeProjectAssets.jsxbin 
+    getAeScript(AeScriptPath)
+    sleep 500
+    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\deleteDiskCache.jsx
+    getAeScript(AeScriptPath)
+return
+
 <Ae_Double_q>:
 {
     DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
@@ -1139,12 +1136,12 @@ return
     WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
     AutoUpdate(_UrlDownloadToFILE_Ae_3,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
     sleep 1000
-    ; 更新第四个文件
-    ; updateIntervalDays := 0
-    ; VERSION_REGEX := "Oi)(?<=Version )?(\d+(?:\.\d+)?)"
-    ; WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
-    ; AutoUpdate(_UrlDownloadToFILE_Ae_4,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
-    ; sleep 1000
+    ; 更新第三个文件
+    updateIntervalDays := 0
+    VERSION_REGEX := "Oi)(?<=Version )?(\d+(?:\.\d+)?)"
+    WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
+    AutoUpdate(_UrlDownloadToFILE_Ae_4,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
+    sleep 1000
     Reload
 return
 

@@ -17,6 +17,7 @@
     vim.map("9", "<Space>", "TTOTAL_CMD")  ;模拟空格，选中取消
     vim.map("0", "<cm_MkDir>", "TTOTAL_CMD")  ;新建文件夹
     vim.map("<F1>", "<TC_double_Compare>", "TTOTAL_CMD")  ;比较
+    vim.map("<F4>", "<TC_SwitchF4>", "TTOTAL_CMD")
     vim.map("<F5>", "<TC_GotoAe>", "TTOTAL_CMD") ;一键到AE
     vim.map("<F2>", "<TC_double_F2>", "TTOTAL_CMD") ;
     vim.map("<F11>", "<TC_SwitchWindows>", "TTOTAL_CMD")  ;切换窗口
@@ -45,12 +46,12 @@
 	vim.map("<SP-'>", "<cm_FocusCmdLine>", "TTOTAL_CMD") ;"
     vim.map("0", "<TC_Sub_azHistory>", "TTOTAL_CMD") ;"
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    vim.map("<F9>1", "<TC_FastCopy_Delete>", "TTOTAL_CMD")
-    vim.map("<F9>2", "<TC_FastCopy_DeletePNG>", "TTOTAL_CMD") ;"
-    vim.map("<F9>2", "<TC_FastCopy_CopyInfo>", "TTOTAL_CMD") ;"
-    vim.map("<F9>2", "<TC_FastCopy_Move>", "TTOTAL_CMD") ;"
-    vim.map("<F9>2", "<TC_FastCopy_CopyCVT>", "TTOTAL_CMD") ;"
-    vim.map("<F9>2", "<TC_FastCopy_Copy>", "TTOTAL_CMD") ;"
+    vim.map("<F9>1", "<TC_TCIMG_RenAddDateTime>", "TTOTAL_CMD")
+    vim.map("<F9>2", "<TC_TCIMG_DirGetUp>", "TTOTAL_CMD") ;"
+    vim.map("<F9>3", "<TC_TCIMG_MoveExtensions>", "TTOTAL_CMD") ;"
+    vim.map("<F9>4", "<TC_TCIMG_DirGetInputName>", "TTOTAL_CMD") ;"
+    ; vim.map("<F9>5", "<TC_FastCopy_CopyCVT>", "TTOTAL_CMD") ;"
+    ; vim.map("<F9>6", "<TC_FastCopy_Copy>", "TTOTAL_CMD") ;"
 
     ;双按
     vim.map("c", "<TC_double_ClearDupTab>", "TTOTAL_CMD") ;清理重复标签 

@@ -44,10 +44,10 @@
  
 ;normal模式
     vim.SetMode("normal","3DsMax")
-    vim.Map("<insert>","<3DsMax_InsertMode>","3DsMax")
+    vim.Map("<insert>", "<3DsMax_SwithMode>", "3DsMax")
 ;insert模式
     vim.SetMode("insert", "3DsMax")
-    vim.Map("<esc>","<3DsMax_NormalMode>","3DsMax")
+    vim.Map("<insert>", "<3DsMax_SwithMode>", "3DsMax")
     #include %A_ScriptDir%\plugins\3DsMax\3DsMaxKey.ahk
     ;#include %A_ScriptDir%\plugins\3DsMax\3DsMaxPlus.ahk
 return
@@ -73,89 +73,75 @@ return
 FunBoBO_VimShow()
 return
 
-; <3DsMax_InsertMode>:
-;     vim.SetMode("insert","3DsMax")
-;     MsgBox, 0, 提示, 【VIM模式】, 0.5
-; return
-
-; <3DsMax_NormalMode>:
-;     ; Send, {Esc}
-;     ; GoSub, <SwitchToEngIME>
-;     vim.SetMode("normal","3DsMax")
-;     MsgBox, 0, 提示, 【正常模式】, 0.5
-; return
-
 ;【全局运行Max】
-; <Run3DsMax>:
-;     3DsMax_StartupRun()
-;     MaxPath := ini.BOBOPath_Config.MaxPath
-;     3DsMax_Class := ini.ahk_class_Config.3DsMax_Class
-;     DetectHiddenWindows, on
-;     IfWinNotExist MaxPath 3DsMax_Class 
-;     { 
-;    		Run %MaxPath%
-;     	WinActivate 
-;     } 
-;     	Else IfWinNotActive ahk_class 3DsMax_Class 
-;     { 
-;     	WinActivate
-;     } 
-;     Else 
-;     { 
-;         WinMinimize 
-;     } 
-;  Return
-
 <Run3DsMax>:
     ExePath := ini.BOBOPath_Config.MaxPath
     tClass := ini.ahk_class_Config.3DsMax_Class
     FunBoBO_RunActivation(ExePath,tClass)
  return
 
+<3DsMax_SwithMode>:
+;   单键切换
+        if 3DsMax_var=2 ; 总
+        3DsMax_var=0
+        3DsMax_var+=1
+        3DsMaxE_var=0
+        if (3DsMax_var=1 )
+        {    
+            GoSub,<3DsMax_NormalMode>
+            return
+        }
+        if (3DsMax_var=2)
+        {
+            GoSub,<3DsMax_InsertMode>
+            return
+        }
+return
+
 <3DsMax_NormalMode>:
 ;   send,{esc}
     vim.SetMode("normal", "3DsMax")
-    MsgBox, 0, 提示, 【正常模式】, 0.5
+    Gui,Ae_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
+    Gui,Ae_insert: Color, %color4%
+    Gui,Ae_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
+    Gui,Ae_insert: Add, Text, ,%_ExitVIMMode%
+    Gui,Ae_insert: Show,AutoSize Center NoActivate
+    WinSet, Transparent,200
+    sleep %SleepTime%
+    Gui,Ae_insert: Destroy
+
 return
 
 <3DsMax_InsertMode>:
-;   send,{esc}
+    GoSub,<3DsMax_ScritAll>
     vim.SetMode("insert", "3DsMax")
-    3DsMax_StartupRun()
-    MsgBox, 0, 提示, 【VIM模式】, 0.5
+    Gui,Ae_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
+    Gui,Ae_insert: Color, %color2%
+    Gui,Ae_insert: Font,cwhite s30 %FontSize% wbold q5,Segoe UI
+    Gui,Ae_insert: Add, Text, ,%_VIMMode%
+    Gui,Ae_insert: Show,AutoSize Center NoActivate
+    WinSet, Transparent,200
+    sleep %SleepTime%
+    Gui,Ae_insert: Destroy
 return
 ;辅助帮助显示
 <3DsMax_Help>:
-FunBoBO_ShowLayout("ae3DsMax1.png")
-KeyWait i
-FunBoBO_HideLayout()
+; FunBoBO_ShowLayout("ae3DsMax1.png")
+; KeyWait i
+; FunBoBO_HideLayout()
 return
 
+
+<3DsMax_ScritAll>:
+    getMaxScriptCommands("ShowTime.ms")
+    sleep 100
+    getMaxScriptCommands("Timeslider.ms")
+return
 ;基本操作
-<3DsMax_Save>:
-{
-    Send,^s
-}
-return
-<3DsMax_Open>:
-{
-    Send,^o
-}
-return
-<3DsMax_SaveAs>:
-{
-    run, %A_ScriptDir%\custom\maxScripts\MXSPyCOM.exe -f %A_ScriptDir%\custom\maxScripts\commands\SaveAs.ms 
-}
-return
-<3DsMax_Exit>:
-{
-    run, %A_ScriptDir%\custom\maxScripts\MXSPyCOM.exe -f %A_ScriptDir%\custom\maxScripts\commands\Exit.ms 
-}
-return
+
 <3DsMax_Archive>:
 {
     run, %A_ScriptDir%\custom\maxScripts\MXSPyCOM.exe -f %A_ScriptDir%\custom\maxScripts\commands\Archive.ms 
-
 }
 return
 <3DsMax_Reset>:
@@ -177,15 +163,17 @@ return
 
 <3DsMax_displayFloater>:
 {
-    ;显示
+    KeyWait, LButton
     getMaxScriptCommands("displayFloater.ms")
 }
 return
 
 <3DsMax_attachSelection>:
 {
-    ;所选物体塌陷
+    WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
+    tool_pathandname = "%activePath%"
     getMaxScriptCommands("attachSelection.ms")
+    return
 }
 return
 
@@ -205,18 +193,23 @@ return
 <3DsMax_convertToPoly>:
 {
     ;转成Poly
+    KeyWait LButton
     getMaxScriptCommands("convertToPoly.ms")
+    return
 }
 return
 <3DsMax_convertToMesh>:
 {
     ;转成Mesh
+    KeyWait LButton
     getMaxScriptCommands("convertToMesh.ms")
+    return
 }
 return
 <3DsMax_convertToSpline>:
 {
     ;转成Spline
+    KeyWait LButton
     getMaxScriptCommands("convertToSpline.ms")
 }
 return
@@ -235,6 +228,22 @@ return
 	WinClose, LPM v2.00 
     return
 }
+ <3DsMax_SwithObjectMode>:
+    if Max_var=2 ; 总共几次 
+    Max_var=0
+    Max_var+=1
+    if (Max_var=1)
+    {
+        send {F3}
+        return
+    }
+    if (Max_var=2)
+    {
+        send {F4}
+        return
+    }
+return
+
 ;轴操作
 <3DsMax_PivotCenter>:
     getMaxScriptCommands("PivotCenter.ms")
@@ -249,6 +258,20 @@ return
     getMaxScriptCommands("PivotSet.ms")
 return
 
+<3DsMax_Key>:
+    send, {k}
+return
+
+<3DsMax_getUp>:
+    send, {,}
+return
+<3DsMax_getDown>:
+    send, {.}
+return
+
+<3DsMax_Play>:
+send,{/}
+return
 ;双按操作
 <3DsMax_Double_Z>:
 {
@@ -268,19 +291,39 @@ return
 }
  Return
 
+<3DsMax_Double_A>:
+{
+    ; 打开|保存
+    DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
+    KeyWait, a
+    if (A_TimeSinceThisHotkey > DoubleClickTime) {
+        getMaxScriptCommands("DetachElements.ms")
+        return
+    }
+    KeyWait, a, % "d T"DoubleClickTime/1000
+    If ! Errorlevel
+        {
+            getMaxScriptCommands("attachSelection.ms")
+            return
+        }
+    else
+        {
+            send {a}
+            return
+        }
+    return
+}
+Return
 
 <3DsMax_Double_O>:
 {
-
+    ; 打开|保存
     DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-    ; Wait for 'd' to be released
     KeyWait, o
     if (A_TimeSinceThisHotkey > DoubleClickTime) {
         Send,^{s}
         return
     }
-    ; Wait for 'd' to be pressed down again (option "d")
-    ; But timeout after T0.5 seconds (If DoubleClickTime is 500)
     KeyWait, o, % "d T"DoubleClickTime/1000
     If ! Errorlevel
         {
@@ -293,25 +336,24 @@ return
             return
         }
     return
-
 }
 Return
 
 <3DsMax_Double_I>:
 {
-    DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-    ; Wait for 'd' to be released
+    ; 独立显示|显示全部
+    DoubleClickTime := DllCall("GetDoubleClickTime") 
     KeyWait, i
     if (A_TimeSinceThisHotkey > DoubleClickTime) {
-        runPath = unhide objects
-        run2MaxScript(runPath)
+        ; runPath = unhide objects
+        ; run2MaxScript(runPath)
         return
     }
-    ; Wait for 'd' to be pressed down again (option "d")
-    ; But timeout after T0.5 seconds (If DoubleClickTime is 500)
     KeyWait, i, % "d T"DoubleClickTime/1000
     If ! Errorlevel
         {
+            ; runPath = unhide objects
+            ; run2MaxScript(runPath)
             getMaxScriptCommands("IsolateSelection.ms")
             return
         }
@@ -325,6 +367,35 @@ Return
 
 }
 Return
+
+<3DsMax_Double_H>:
+{
+    ; 独立显示|显示全部
+    DoubleClickTime := DllCall("GetDoubleClickTime") 
+    KeyWait, h
+    if (A_TimeSinceThisHotkey > DoubleClickTime) {
+        runPath = unhide objects
+        run2MaxScript(runPath)
+        return
+    }
+    KeyWait, h, % "d T"DoubleClickTime/1000
+    If ! Errorlevel
+        {
+            runPath = actionMan.executeAction 0 "281"
+            run2MaxScript(runPath)
+            return
+        }
+    else
+        {
+            ; send {h}
+            runPath = hide Selection
+            run2MaxScript(runPath)
+            return
+        }
+    return
+}
+Return
+
 
 <3DsMax_Space>:
 {
@@ -393,7 +464,6 @@ Return
     DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
     KeyWait, w
     if (A_TimeSinceThisHotkey > DoubleClickTime) {
-        ; Send,^{s}
         return
     }
     KeyWait, w, % "d T"DoubleClickTime/1000
@@ -408,20 +478,54 @@ Return
             return
         }
     return
-    ; t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
-    ; settimer, 3DsMax_tappedkey_w, %t%
-    ; if (t == "off")
-    ; goto 3DsMax_double_w
-    ; return
-
-    ; 3DsMax_tappedkey_w:
-    ;     Send,w
-    ; return
-
-    ; 3DsMax_double_w:
-    ;     getMaxScriptCommands("MaximizeViewport.ms")
-    ; return
 }
+<3DsMax_Double_F>:
+{
+
+    ; DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
+    ; KeyWait, f
+    ; if (A_TimeSinceThisHotkey > DoubleClickTime) {
+
+    ;     runPath =unfreeze objects
+    ;     run2MaxScript(runPath)
+    ;     return
+    ; }
+    ; KeyWait, f, % "d T"DoubleClickTime/1000
+    ; If ! Errorlevel
+    ;     {
+    ;         runPath = freeze Selection
+    ;         run2MaxScript(runPath)
+    ;         return
+    ;     }
+    ; else
+    ;     {
+    ;         send {f}
+    ;         return
+    ;     }
+    ; return
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, 3DsMax_tappedkey_f, %t%
+
+    if (t == "off")
+    goto 3DsMax_double_f
+    return
+
+    3DsMax_tappedkey_f:
+        Send, f
+    return
+
+    3DsMax_double_f:
+            runPath = freeze Selection
+            run2MaxScript(runPath)
+    return  
+
+
+}
+<3DsMax_unfreeze>:
+        KeyWait LButton
+        runPath =unfreeze objects
+        run2MaxScript(runPath)
+return
 <3DsMax_Double_D>:
 {
     ; 复制粘贴|删除
@@ -434,8 +538,6 @@ Return
     KeyWait, d, % "d T"DoubleClickTime/1000
     If ! Errorlevel
         {
-            send ^{c}
-            sleep 100
             send ^{v}
             return
         }
@@ -449,23 +551,39 @@ Return
 
 <3DsMax_Double_0>:
 {
-    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
-    settimer, 3DsMax_tappedkey_0, %t%
-    if (t == "off")
-    goto 3DsMax_double_0
+    ; t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    ; settimer, 3DsMax_tappedkey_0, %t%
+    ; if (t == "off")
+    ; goto 3DsMax_double_0
+    ; return
+
+    ; 3DsMax_tappedkey_0:
+    ;     Send,0
+    ; return
+
+    ; 3DsMax_double_0:
+    ;     getMaxScriptCommands("XYZ_0.ms")
+    ; return
+    DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
+    KeyWait, 0
+    if (A_TimeSinceThisHotkey > DoubleClickTime) {
+        getMaxScriptCommands("PivotCenter.ms")
+        return
+    }
+    KeyWait, 0, % "d T"DoubleClickTime/1000
+    If ! Errorlevel
+        {
+            getMaxScriptCommands("XYZ_0.ms") 
+            return
+        }
+    else
+        {
+            send 0
+            return
+        }
     return
 
-    3DsMax_tappedkey_0:
-        Send,0
-    return
-
-    3DsMax_double_0:
-        getMaxScriptCommands("XYZ_0.ms")
-    return
 }
-
-
-
 
 <3DsMax_Double_X>:
 {
@@ -518,46 +636,46 @@ Return
 
 <3DsMax_Double_S>:
 {
-    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
-    settimer, 3DsMax_tappedkey_s, %t%
-    if (t == "off")
-    goto 3DsMax_double_s
-    return
+    ; t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    ; settimer, 3DsMax_tappedkey_s, %t%
+    ; if (t == "off")
+    ; goto 3DsMax_double_s
+    ; return
 
-    3DsMax_tappedkey_s:
-    Send {s}
-    return
+    ; 3DsMax_tappedkey_s:
+    ; Send {s}
+    ; return
 
-    3DsMax_double_s:
-    Send, ^{s}
-    return
+    ; 3DsMax_double_s:
+    ; Send, ^{s}
+    ; return
 }
 Return
 
 <3DsMax_Double_F9>:
 {
-    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
-    settimer, 3DsMax_tappedkey_F9, %t%
-    if (t == "off")
-    goto 3DsMax_double_F9
-    return
+    ; t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    ; settimer, 3DsMax_tappedkey_F9, %t%
+    ; if (t == "off")
+    ; goto 3DsMax_double_F9
+    ; return
 
-    3DsMax_tappedkey_F9:
-    Send {F9}
-    return
+    ; 3DsMax_tappedkey_F9:
+    ; Send {F9}
+    ; return
 
-    3DsMax_double_F9:
-    Send, {F10}
-    return
+    ; 3DsMax_double_F9:
+    ; Send, {F10}
+    ; return
 }
 Return
 
 ;发送ESC
-<3DsMax_esc>:
-{
-    Send, {Esc}
-;    MsgBox
-}
+; <3DsMax_esc>:
+; {
+;     Send, {Esc}
+; ;    MsgBox
+; }
 
 
 ;播放暂停
@@ -577,7 +695,7 @@ Return
 
 <3DsMax_activeType>:
 {
-    run, %A_ScriptDir%\custom\maxScripts\MXSPyCOM.exe -f %A_ScriptDir%\custom\maxScripts\activeType.ms 
+    ; run, %A_ScriptDir%\custom\maxScripts\MXSPyCOM.exe -f %A_ScriptDir%\custom\maxScripts\activeType.ms 
 }
 Return
 
@@ -784,3 +902,5 @@ Return
 ;清楚材质
 ;for o in $ do (o.material = undefined)
 ;macros.run "PolyTools" "TransformTools"
+;Shift + C 隐藏摄像机
+;Shift + G 隐藏模型

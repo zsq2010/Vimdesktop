@@ -342,3 +342,7 @@ IME_GET0E1C(WinTitle="A"){			;借鉴了某日本人脚本中的获取输入法�
     DetectHiddenWindows,%DetectSave%
     Return ErrorLevel
 }
+
+varExist(ByRef v) { ; 检测变量是否存在
+   return &v = &n ? 0 : v = "" ? 2 : 1 
+}

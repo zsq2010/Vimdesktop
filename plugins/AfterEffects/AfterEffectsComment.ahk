@@ -97,8 +97,7 @@ If Language=CN
     vim.Comment("<Ae_Double_Shift>", "切换曲线")
 
 
-    global _VIMMode:="进入VIM模式"
-    global _ExitVIMMode:="退出VIM模式"
+
     global _AeVersion:="当前版本:2.0"
 }
 else
