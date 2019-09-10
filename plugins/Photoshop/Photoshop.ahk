@@ -19,7 +19,7 @@
 ;重命名大于3层 会莫名其妙新建个图层
 Photoshop:
 ;定义注释
-    global Photoshop_update_version:="0.9"
+    global Photoshop_update_version:="0.8"
 
     vim.SetAction("<Photoshop_NormalMode>", "返回正常模式")
     vim.SetAction("<Photoshop_InsertMode>", "进入VIM模式")
@@ -172,27 +172,27 @@ return
 <Photoshop_NormalMode>:
 ;   send,{esc}
     vim.SetMode("normal", "AfterEffects")
-    Gui,Ae_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
-    Gui,Ae_insert: Color, %color4%
-    Gui,Ae_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
-    Gui,Ae_insert: Add, Text, ,%_ExitVIMMode%
-    Gui,Ae_insert: Show,AutoSize Center NoActivate
+    Gui,Ps_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
+    Gui,Ps_insert: Color, %color4%
+    Gui,Ps_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
+    Gui,Ps_insert: Add, Text, ,%_ExitVIMMode%
+    Gui,Ps_insert: Show,AutoSize Center NoActivate
     WinSet, Transparent,200
     sleep %SleepTime%
-    Gui,Ae_insert: Destroy
+    Gui,Ps_insert: Destroy
 return
 
 <Photoshop_InsertMode>:
 ;   send,{esc}
     vim.SetMode("insert", "AfterEffects")
-    Gui,Ae_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
-    Gui,Ae_insert: Color, %color2%
-    Gui,Ae_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
-    Gui,Ae_insert: Add, Text, ,%_VIMMode%
-    Gui,Ae_insert: Show,AutoSize Center NoActivate
+    Gui,Ps_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
+    Gui,Ps_insert: Color, %color2%
+    Gui,Ps_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
+    Gui,Ps_insert: Add, Text, ,%_VIMMode%
+    Gui,Ps_insert: Show,AutoSize Center NoActivate
     WinSet, Transparent,200
-    sleep %SleepTime%
-    Gui,Ae_insert: Destroy
+    sleep 1000
+    Gui,Ps_insert: Hide
 return
 ;辅助帮助显示
 <PS_Help>:
@@ -935,8 +935,7 @@ return
     Gui,Ps_insert: Add, Text, ,%_AutoUpdate%
     Gui,Ps_insert: Show,AutoSize Center NoActivate
     WinSet, Transparent,200
-    sleep %SleepTime%
-    Gui,Ae_insert: Destroy
+        
     
     ; ; 更新第一个文件
     ; updateIntervalDays := 0
@@ -956,10 +955,12 @@ return
 
 
     URLDownloadToFile(WorkflowsPluginsDownDir "/Photoshop/Photoshop.ahk", A_Temp "\temp_Photoshop.ahk")
+    URLDownloadToFile(WorkflowsPluginsDownDir "/Photoshop/PhotoshopComment.ahk", A_Temp "\temp_PhotoshopComment.ahk")
 	versionReg=iS)^\t*\s*global Photoshop_update_version:="([\d\.]*)"
 
 	Loop, read, %A_Temp%\temp_Photoshop.ahk
 	{
+        Gui,Ps_insert: Hide
 		if(RegExMatch(A_LoopReadLine,versionReg)){
 			versionStr:=RegExReplace(A_LoopReadLine,versionReg,"$1")
 			break
@@ -971,31 +972,34 @@ return
 	}
 	if(versionStr){
 		if(Photoshop_update_version<versionStr){
-			MsgBox,33,检查更新,检测到新版本`n`n%Photoshop_update_version%`t版本更新后=>`t%versionStr%`n`n是否更新到最新版本？`n覆盖老版本文件，如有修改过请注意备份！
+			MsgBox,33,检查更新,检测到新版本>>>>V:%versionStr%<<<<`n`n当前版本:%Photoshop_update_version%`t版本更新后==>>`t%versionStr%`n`n是否更新到最新版本？`n覆盖老版本文件，如有修改过请注意备份！
 			IfMsgBox Ok
 			{
 				TrayTip,,下载最新版本并替换老版本...,5,1
-				; gosub,Config_Update
-                ; FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_back.ini ,1
-                ; URLDownloadToFile(WorkflowsPluginsDownDir "Photoshop/Photoshop.ahk",A_Temp "\temp_Photoshop.ahk")
-                ; sleep 1000
-
-                ; gosub,Photoshop_Update
                 FileCopy, %A_Temp%\temp_Photoshop.ahk, %A_ScriptDir%\plugins\Photoshop\Photoshop.ahk ,1
+                FileCopy, %A_Temp%\temp_PhotoshopComment.ahk, %A_ScriptDir%\plugins\Photoshop\PhotoshopComment.ahk ,1
                 sleep 1000
                 TrayTip,,已经更新到最新版本。,5,1
                 sleep 500
+                gosub,<Photoshop_Update>
                 Reload
 			}
 		}else if(checkUpdateFlag){
 			FileDelete, %A_Temp%\temp_Photoshop.ahk
+            FileDelete, %A_Temp%\temp_PhotoshopComment.ahk
 			TrayTip,,已经是最新版本。,5,1
 			checkUpdateFlag:=false
 		}else if(A_DD!=01 && A_DD!=15){
 			FileDelete, %A_Temp%\temp_Photoshop.ahk
+            FileDelete, %A_Temp%\temp_PhotoshopComment.ahk
 		}
 	}
 return
+<Photoshop_Update>:
+Run,https://www.kancloud.cn/funbobosky/vim_unity/1252477
+TrayTip,,已经更新到最新版本。,5,1
+return
+
 ; ~LButton & d:: 
 ; WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
 ; tool_pathandname = "%activePath%"
