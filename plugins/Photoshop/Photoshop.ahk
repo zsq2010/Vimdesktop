@@ -19,6 +19,8 @@
 ;重命名大于3层 会莫名其妙新建个图层
 Photoshop:
 ;定义注释
+    global Photoshop_update_version:=1.1
+
     vim.SetAction("<Photoshop_NormalMode>", "返回正常模式")
     vim.SetAction("<Photoshop_InsertMode>", "进入VIM模式")
     vim.SetWin("Photoshop","ahk_exe","photoshop.exe")
@@ -936,20 +938,54 @@ return
     sleep %SleepTime%
     Gui,Ae_insert: Destroy
     
-    ; 更新第一个文件
-    updateIntervalDays := 0
-    VERSION_REGEX := "Oi)(?<=Version )?(\d+(?:\.\d+)?)"
-    WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
-    AutoUpdate(_UrlDownloadToFILE_Photoshop_1,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
-    ; 更新第二个文件
-    sleep 5000
-    updateIntervalDays := 0
-    VERSION_REGEX := "Oi)(?<=Version )?(\d+(?:\.\d+)?)"
-    WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
-    AutoUpdate(_UrlDownloadToFILE_Photoshop_2,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
-    sleep 2000
-    Reload
+    ; ; 更新第一个文件
+    ; updateIntervalDays := 0
+    ; VERSION_REGEX := "Oi)(?<=Version )?(\d+(?:\.\d+)?)"
+    ; WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
+    ; AutoUpdate(_UrlDownloadToFILE_Photoshop_1,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
+    ; ; 更新第二个文件
+    ; sleep 5000
+    ; updateIntervalDays := 0
+    ; VERSION_REGEX := "Oi)(?<=Version )?(\d+(?:\.\d+)?)"
+    ; WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
+    ; AutoUpdate(_UrlDownloadToFILE_Photoshop_2,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
+    ; sleep 2000
+    ; Reload
 
+    URLDownloadToFile(WorkflowsPluginsDownDir "Photoshop/Photoshop.ahk",A_Temp "\temp_Photoshop.ahk")
+	versionReg=iS)^\t*\s*global Photoshop_update_version:="([\d\.]*)"
+	Loop, read, %A_Temp%\temp_Photoshop.ahk
+	{
+		if(RegExMatch(A_LoopReadLine,versionReg)){
+			versionStr:=RegExReplace(A_LoopReadLine,versionReg,"$1")
+			break
+		}
+		if(A_LoopReadLine="404: Not Found"){
+			TrayTip,,文件下载异常，更新失败！,3,1
+			return
+		}
+	}
+	if(versionStr){
+		if(Photoshop_update_version<versionStr){
+			MsgBox,33,检查更新,检测到新版本`n`n%Photoshop_update_version%`t版本更新后=>`t%versionStr%`n`n是否更新到最新版本？`n覆盖老版本文件，如有修改过请注意备份！
+			IfMsgBox Ok
+			{
+				TrayTip,,下载最新版本并替换老版本...,5,1
+				; gosub,Config_Update
+                ; FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_back.ini ,1
+                URLDownloadToFile(WorkflowsPluginsDownDir "Photoshop/Photoshop.ahk",A_Temp "\temp_Photoshop.ahk")
+                sleep 1000
+                FileCopy, %A_Temp%\temp_Photoshop.ahk, %A_ScriptDir%\plugins\Photoshop\Photoshop.ahk ,1
+				ExitApp
+			}
+		}else if(checkUpdateFlag){
+			FileDelete, %A_Temp%\temp_Photoshop.ahk
+			TrayTip,,已经是最新版本。,5,1
+			checkUpdateFlag:=false
+		}else if(A_DD!=01 && A_DD!=15){
+			FileDelete, %A_Temp%\temp_Photoshop.ahk
+		}
+	}
 return
 
 

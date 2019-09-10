@@ -27,6 +27,8 @@ Menu, LangSet, add, English
 Menu, tray, add, (&L) %_Language%, :LangSet
 Menu, aboutMe, add, (&H) %_Help%, <VIMD_Help>
 Menu, aboutMe, add, (&U) %_Update%, <VIMD_Update>
+; Menu, aboutMe, add, (&U) %_Update%, Check_Update
+
 Menu, aboutMe, add, (&B) %_BackupRestore%, <VIMD_BackupRestore>
 Menu, tray, add, (&L) %_aboutMe%, :aboutMe
 Menu, Tray, Add, (&R) %_Restart% , <Reload>
@@ -113,12 +115,12 @@ return
 
 <VIMD_Update>:
 ; 执行备份文件
-d = (%A_YYYY%_%A_MM%_%A_DD%_%A_Hour%%A_Min%%A_Sec%)
-; 执行备份文件
-FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_备份_%d%.ini ,1
-; 执行备份文件2
-FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_备份_还原.ini ,1
-Sleep, 1000
+; d = (%A_YYYY%_%A_MM%_%A_DD%_%A_Hour%%A_Min%%A_Sec%)
+; ; 执行备份文件
+; FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_备份_%d%.ini ,1
+; ; 执行备份文件2
+; FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_备份_还原.ini ,1
+; Sleep, 1000
 ; 开始运行更新工具
 ; run, %A_ScriptDir%\updata.exe
 ; Sleep, 2000
@@ -126,7 +128,7 @@ Sleep, 1000
 ; Run, https://github.com/BoBOVFX/Vimdesktop
 ; Sleep, 2000
 ; Exitapp
-Gosub,Auto_Update
+Gosub,Check_Update
 return
 
 <VIMD_BackupRestore>:
@@ -198,11 +200,12 @@ Auto_Update:
 	}
 	if(versionStr){
 		if(Workflows_update_version<versionStr){
-			MsgBox,33,%_AppName%检查更新,检测到%_AppName%有新版本`n`n%Workflows_update_version%`t版本更新后=>`t%versionStr%`n`n是否更新到最新版本？`n覆盖老版本文件，如有修改过RunAny.ahk请注意备份！
+			MsgBox,33,%_AppName%检查更新,检测到%_AppName%有新版本`n`n%Workflows_update_version%`t版本更新后=>`t%versionStr%`n`n是否更新到最新版本？`n覆盖老版本文件，如有修改过vimd.ini请注意备份！
 			IfMsgBox Ok
 			{
 				TrayTip,,%_AppName%下载最新版本并替换老版本...,5,1
 				; gosub,Config_Update
+                ; FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_back.ini ,1
 				URLDownloadToFile(WorkflowsDownDir "/vimd.exe",A_Temp "\temp_vimd.exe")
 				gosub,vimd_Update
 				shell := ComObjCreate("WScript.Shell")
