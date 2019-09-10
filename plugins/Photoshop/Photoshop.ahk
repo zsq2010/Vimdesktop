@@ -954,7 +954,6 @@ return
 
     URLDownloadToFile(WorkflowsPluginsDownDir "/Photoshop/Photoshop.ahk",A_Temp "\temp_Photoshop.ahk")
 	versionReg=iS)^\t*\s*global Photoshop_update_version:="([\d\.]*)"
-    msgbox % WorkflowsPluginsDownDir
 	Loop, read, %A_Temp%\temp_Photoshop.ahk
 	{
 		if(RegExMatch(A_LoopReadLine,versionReg)){
@@ -974,9 +973,10 @@ return
 				TrayTip,,下载最新版本并替换老版本...,5,1
 				; gosub,Config_Update
                 ; FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_back.ini ,1
-                URLDownloadToFile(WorkflowsPluginsDownDir "Photoshop/Photoshop.ahk",A_Temp "\temp_Photoshop.ahk")
-                sleep 1000
-                FileCopy, %A_Temp%\temp_Photoshop.ahk, %A_ScriptDir%\plugins\Photoshop\Photoshop.ahk ,1
+                ; URLDownloadToFile(WorkflowsPluginsDownDir "Photoshop/Photoshop.ahk",A_Temp "\temp_Photoshop.ahk")
+                ; sleep 1000
+                gosub,Photoshop_Update
+                ; FileCopy, %A_Temp%\temp_Photoshop.ahk, %A_ScriptDir%\plugins\Photoshop\Photoshop.ahk ,1
 				ExitApp
 			}
 		}else if(checkUpdateFlag){
@@ -989,7 +989,31 @@ return
 	}
 return
 
-
+Photoshop_Update:
+; Run,https://github.com/hui-Zz/RunAny/wiki/RunAny版本更新历史
+TrayTip,,已经更新到最新版本。,5,1
+FileAppend,
+(
+@ECHO OFF & setlocal enabledelayedexpansion & TITLE 更新版本
+set /a x=1
+:BEGIN
+set /a x+=1
+ping -n 2 127.1>nul
+if exist "%A_Temp%\temp_Photoshop.ahk" `(
+  MOVE /y "%A_Temp%\temp_Photoshop.ahk" "%A_ScriptDir%\plugins\Photoshop\Photoshop.ahk"
+`)
+goto INDEX
+:INDEX
+if !x! GTR 10 `(
+  exit
+`)
+if exist "%A_Temp%\temp_Photoshop.ahk" `(
+  goto BEGIN
+`)
+start "" "%A_ScriptDir%\%A_ScriptName%"
+exit
+),%A_Temp%\vimd_Update.bat
+return
 ; ~LButton & d:: 
 ; WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
 ; tool_pathandname = "%activePath%"
