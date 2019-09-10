@@ -975,8 +975,11 @@ return
                 ; FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_back.ini ,1
                 ; URLDownloadToFile(WorkflowsPluginsDownDir "Photoshop/Photoshop.ahk",A_Temp "\temp_Photoshop.ahk")
                 ; sleep 1000
-                gosub,Photoshop_Update
-                ; FileCopy, %A_Temp%\temp_Photoshop.ahk, %A_ScriptDir%\plugins\Photoshop\Photoshop.ahk ,1
+
+                ; gosub,Photoshop_Update
+                FileCopy, %Temp%\temp_Photoshop.ahk, %A_ScriptDir%\plugins\Photoshop\Photoshop.ahk ,1
+                sleep 1000
+                TrayTip,,已经更新到最新版本。,5,1
 				ExitApp
 			}
 		}else if(checkUpdateFlag){
