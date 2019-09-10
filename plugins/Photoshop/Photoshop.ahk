@@ -19,7 +19,7 @@
 ;重命名大于3层 会莫名其妙新建个图层
 Photoshop:
 ;定义注释
-    global Photoshop_update_version:="1.0"
+    global Photoshop_update_version:="0.9"
 
     vim.SetAction("<Photoshop_NormalMode>", "返回正常模式")
     vim.SetAction("<Photoshop_InsertMode>", "进入VIM模式")
@@ -984,7 +984,8 @@ return
                 FileCopy, %A_Temp%\temp_Photoshop.ahk, %A_ScriptDir%\plugins\Photoshop\Photoshop.ahk ,1
                 sleep 1000
                 TrayTip,,已经更新到最新版本。,5,1
-				ExitApp
+                sleep 500
+                Reload
 			}
 		}else if(checkUpdateFlag){
 			FileDelete, %A_Temp%\temp_Photoshop.ahk
@@ -992,8 +993,6 @@ return
 			checkUpdateFlag:=false
 		}else if(A_DD!=01 && A_DD!=15){
 			FileDelete, %A_Temp%\temp_Photoshop.ahk
-            sleep 500
-            Reload
 		}
 	}
 return
