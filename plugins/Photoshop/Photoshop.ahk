@@ -19,7 +19,7 @@
 ;重命名大于3层 会莫名其妙新建个图层
 Photoshop:
 ;定义注释
-    global Photoshop_update_version:=1.1
+    global Photoshop_update_version:="1.1"
 
     vim.SetAction("<Photoshop_NormalMode>", "返回正常模式")
     vim.SetAction("<Photoshop_InsertMode>", "进入VIM模式")
@@ -929,14 +929,14 @@ return
 
 <PS_AutoUpdate>:
 
-    Gui,Ps_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
-    Gui,Ps_insert: Color, %color2%
-    Gui,Ps_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
-    Gui,Ps_insert: Add, Text, ,%_AutoUpdate%
-    Gui,Ps_insert: Show,AutoSize Center NoActivate
-    WinSet, Transparent,200
-    sleep %SleepTime%
-    Gui,Ae_insert: Destroy
+    ; Gui,Ps_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
+    ; Gui,Ps_insert: Color, %color2%
+    ; Gui,Ps_insert: Font,cwhite s20 %FontSize% wbold q5,Segoe UI
+    ; Gui,Ps_insert: Add, Text, ,%_AutoUpdate%
+    ; Gui,Ps_insert: Show,AutoSize Center NoActivate
+    ; WinSet, Transparent,200
+    ; sleep %SleepTime%
+    ; Gui,Ae_insert: Destroy
     
     ; ; 更新第一个文件
     ; updateIntervalDays := 0
@@ -951,10 +951,10 @@ return
     ; AutoUpdate(_UrlDownloadToFILE_Photoshop_2,, updateIntervalDays, [_UrlDownloadToFILE_Photoshop_CHANGELOG, VERSION_REGEX, WhatNew_REGEX])
     ; sleep 2000
     ; Reload
-
-    URLDownloadToFile(WorkflowsPluginsDownDir "/Photoshop/Photoshop.ahk",A_Temp "\temp_Photoshop.ahk")
+    URLDownloadToFile(WorkflowsPluginsDownDir "/Photoshop/Photoshop.ahk",A_ScriptDir "\plugins\Photoshop\temp_Photoshop.ahk")
 	versionReg=iS)^\t*\s*global Photoshop_update_version:="([\d\.]*)"
-	Loop, read, %A_Temp%\temp_Photoshop.ahk
+
+	Loop, read, %A_ScriptDir%\plugins\Photoshop\temp_Photoshop.ahk
 	{
 		if(RegExMatch(A_LoopReadLine,versionReg)){
 			versionStr:=RegExReplace(A_LoopReadLine,versionReg,"$1")
@@ -977,7 +977,7 @@ return
                 ; sleep 1000
 
                 ; gosub,Photoshop_Update
-                FileCopy, %Temp%\temp_Photoshop.ahk, %A_ScriptDir%\plugins\Photoshop\Photoshop.ahk ,1
+                FileCopy, %A_Temp%\temp_Photoshop.ahk, %A_ScriptDir%\plugins\Photoshop\Photoshop.ahk ,1
                 sleep 1000
                 TrayTip,,已经更新到最新版本。,5,1
 				ExitApp
@@ -990,32 +990,6 @@ return
 			FileDelete, %A_Temp%\temp_Photoshop.ahk
 		}
 	}
-return
-
-Photoshop_Update:
-; Run,https://github.com/hui-Zz/RunAny/wiki/RunAny版本更新历史
-TrayTip,,已经更新到最新版本。,5,1
-FileAppend,
-(
-@ECHO OFF & setlocal enabledelayedexpansion & TITLE 更新版本
-set /a x=1
-:BEGIN
-set /a x+=1
-ping -n 2 127.1>nul
-if exist "%A_Temp%\temp_Photoshop.ahk" `(
-  MOVE /y "%A_Temp%\temp_Photoshop.ahk" "%A_ScriptDir%\plugins\Photoshop\Photoshop.ahk"
-`)
-goto INDEX
-:INDEX
-if !x! GTR 10 `(
-  exit
-`)
-if exist "%A_Temp%\temp_Photoshop.ahk" `(
-  goto BEGIN
-`)
-start "" "%A_ScriptDir%\%A_ScriptName%"
-exit
-),%A_Temp%\vimd_Update.bat
 return
 ; ~LButton & d:: 
 ; WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
