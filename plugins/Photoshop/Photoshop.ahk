@@ -952,8 +952,9 @@ return
     ; sleep 2000
     ; Reload
 
-    URLDownloadToFile(WorkflowsPluginsDownDir "Photoshop/Photoshop.ahk",A_Temp "\temp_Photoshop.ahk")
+    URLDownloadToFile(WorkflowsPluginsDownDir "/Photoshop/Photoshop.ahk",A_Temp "\temp_Photoshop.ahk")
 	versionReg=iS)^\t*\s*global Photoshop_update_version:="([\d\.]*)"
+    msgbox % WorkflowsPluginsDownDir
 	Loop, read, %A_Temp%\temp_Photoshop.ahk
 	{
 		if(RegExMatch(A_LoopReadLine,versionReg)){
