@@ -637,33 +637,7 @@ Return
 Return
 
 <Ae_Double_F1>:
-    ; 单F1超级模式 双按F1优化AE
-    ; t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
-    ; settimer, ae_tappedkey_F1, %t%
-    ; if (t == "off")
-    ; goto ae_double_F1
-    ; return
-    ; ae_tappedkey_F1:
-    ;     {
-                WinActivate, ahk_exe AfterFX.exe
-                MouseGetPos, MX, MY
-                MouseX:=MX-305
-                MouseY:=MY-155 
-                Gui,Ae: Show,X%MouseX% Y%MouseY% ,NoActivate ; NoActivate avoids deactivating the currently active window.
-                ;保存当前信息
-                KeyWait,F1                              
-                Sleep, 20                                                                                              
-                IfWinActive, ahk_class AutoHotkeyGUI
-                { 
-                    Click down 
-                    Sleep, 20  
-                    Click up
-                    Sleep, 20                 
-                    Gui,Ae: Hide
-                    sleep 200
-                    Click 1
-                }
-        ; }
+    MsgBox,大侠停住 , 此乃捐赠功能 【 F1超级模式 】！！！`n`n 如需开启请联系本主在下！`n`nEmail:lingchuanbo@gmail.com
     return
 ; Double_Q 渲染输出
 ; #if WinActive("ahk_class Qt5QWindowIcon")
