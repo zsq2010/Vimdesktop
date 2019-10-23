@@ -55,6 +55,8 @@ Explorer:
     vim.map("G", "<end>", "Explorer")
     vim.map("f", "<Explorer_GotoTCInNewTab>", "Explorer")
     vim.map("F", "<Explorer_GotoTC>", "Explorer")
+    vim.map("<F9>", "<Explorer_Everyting>", "Explorer")
+    
 
      vim.map("<space>", "<Explorer_space>", "Explorer")
     vim.map("<SP-a>", "<Explorer_GotoAe>", "Explorer")
@@ -176,6 +178,15 @@ return
     Explorer_GotoTC(true, true)
 return
 
+
+<Explorer_Everyting>:
+    folder:=Explorer_GetPath()
+    ExePath := ini.BOBOPath_Config.EverythingPath
+    run %ExePath% -p %folder% 
+return
+
+
+
 Explorer_GotoTC(newTab, closeExplorer = false)
 {
     OldClipboard := ClipboardAll
@@ -287,3 +298,4 @@ Explorer_Get(hwnd = "", selection = false)
     return Trim(ret,"`n")
 }
 return
+

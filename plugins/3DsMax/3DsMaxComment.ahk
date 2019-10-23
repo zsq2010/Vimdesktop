@@ -41,13 +41,21 @@ If Language=CN
     vim.Comment("<3DsMax_Reset>","重置")
     vim.Comment("<3DsMax_Import>","导入")
     vim.Comment("<3DsMax_Export>","导出")
-    vim.Comment("<3DsMax_UpDater>","更新")
+    vim.Comment("<3DsMax_UpDater>","3DsMax插件更新")
+    vim.Comment("<3DsMax_Ini>","3DsMax配置初始化")
     
     vim.Comment("<3DsMax_maxToTotalcmd>","Total Commander")
 
     vim.Comment("<3DsMax_convertToSpline>","转化为Spline")
     vim.Comment("<3DsMax_convertToPoly>","转化为Poly")
     vim.Comment("<3DsMax_convertToMesh>","转化为Mesh")
+
+    vim.Comment("<3DsMax_attachSelection>", "塌陷")
+    vim.Comment("<3DsMax_Align>", "对齐")
+    vim.Comment("<3DsMax_warp>", "绑定空间")
+
+    vim.Comment("<3DsMax_SelectLink>", "链接")
+    vim.Comment("<3DsMax_SelectUnLink>", "断开链接")
 }
 else
 {

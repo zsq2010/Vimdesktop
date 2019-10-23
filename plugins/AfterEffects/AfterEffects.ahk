@@ -39,35 +39,42 @@ AfterEffects:
     vim.SetAction("<AfterEffects_InsertMode>", "进入VIM模式")
     vim.SetWin("AfterEffects","ahk_exe","AfterFX.exe")
     vim.BeforeActionDo("AE_CheckMode", "AfterEffects")
-    
     #Include %A_ScriptDir%\plugins\AfterEffects\AfterEffectsComment.ahk 
     
 ;normal模式
     vim.SetMode("normal", "AfterEffects")
-    ; vim.map("<insert>","<AfterEffects_InsertMode>","AfterEffects")
     vim.Map("<insert>", "<AfterEffects_SwithMode>", "AfterEffects")
 ;insert模式
     vim.SetMode("insert", "AfterEffects")
-    ; vim.Map("<esc>", "<AfterEffects_NormalMode>", "AfterEffects")
     vim.Map("<insert>", "<AfterEffects_SwithMode>", "AfterEffects")
-    ;载入顺序不能兑换否则会引起不良反应
+    ;载入按键
     #Include %A_ScriptDir%\plugins\AfterEffects\AfterEffectsKey.ahk
-    #Include %A_ScriptDir%\plugins\AfterEffects\AfterEffectsPlus.ahk
+    ;载入增强按键
+    ;#Include %A_ScriptDir%\plugins\AfterEffects\AfterEffectsPlus.ahk
 
 return
 
-;判断输入状态屏蔽
+;   输入状时态屏蔽
 AE_CheckMode(){
-	ControlGetFocus, ctrl, A
-	If RegExMatch(ctrl,"i)Edit")
-		return True
+    ControlGetFocus, ctrl, A
+    If RegExMatch(ctrl,"i)Edit")
+        {
+        return True 
+        }
     If (A_Cursor=="IBeam") ;工字光标
-        return True
-	return False
-
+        {
+            return True
+        }
+        
+    else
+        {
+            seten()			;英文0x4090409
+            return False
+        }
 }
+
 <AeVim>:
-FunBoBO_VimShow()
+    FunBoBO_VimShow()
 return
 <AE_热键帮助>:  ;{
 ;    QZ_VIMD_ShowKeyHelp()
@@ -78,25 +85,25 @@ return
 send,{Space}
 return
 
-
+;   脚本帮助窗口
 <HelpAe>:
-; FunBoBO_ShowLayout("aeHelp1.png")
-; KeyWait i
-; FunBoBO_HideLayout()
-AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\Help.jsx
-getAeScript(AeScriptPath)
-return
+{
+    getAeScript("custom\ae_scripts\commands\Help.jsx")
+    return
+}
 
 
-;【全局运行AE】
+
+;   全局运行AE
 <RunAE>:
     ExePath := ini.BOBOPath_Config.AEPath
     tClass := ini.ahk_class_Config.AEClass
     FunBoBO_RunActivation(ExePath,tClass)
- Return
+Return
 
-<AfterEffects_SwithMode>:
 ;   单键切换
+<AfterEffects_SwithMode>:
+
         if AE_var=2 ; 总
         AE_var=0
         AE_var+=1
@@ -113,9 +120,8 @@ return
         }
 return
 
-
+;   默认模式
 <AfterEffects_NormalMode>:
-;   send,{esc}
     vim.SetMode("normal", "AfterEffects")
     Gui,Ae_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
     Gui,Ae_insert: Color, %color4%
@@ -125,9 +131,9 @@ return
     WinSet, Transparent,200
     sleep %SleepTime%
     Gui,Ae_insert: Destroy
-
 return
 
+;   进入模式
 <AfterEffects_InsertMode>:
     vim.SetMode("insert", "AfterEffects")
     Gui,Ae_insert: +LastFound +AlwaysOnTop -Caption +ToolWindow
@@ -144,54 +150,66 @@ return
 ;     send, ^+{e}
 ; return
 
-;基本
+;基本操作
+
+;   打开
 <Ae_Open>:
 {
     send,^o
     return
 }
+
+
 <Ae_OpenRecent>:
 {
     send,^!+p
     return
 }
+
+;   保存
 <Ae_Save>:
 {
     send,^s
     return
 }
+
+;   另存为
 <Ae_SaveAs>:
 {
     send,^+s
     return
 }
+
+;   导入
 <Ae_Import>:
 {
     send,^i
     return
 }
+
+;   退出
 <Ae_Exit>:
 {
     send,^q
     return
 }
 
+;   简化文件
 <Ae_CllectFiles>:
 {
-    AeScriptPath = app.executeCommand(2482);
-    getAeScript(AeScriptPath)
+    getAeScriptCommand(app.executeCommand(2482))
     return
 }
 
+;   清理内存
 <Ae_AllMemoryDisk>:
 {
-    AeScriptPath = app.executeCommand(10200);
-    getAeScript(AeScriptPath)
+    getAeScriptCommand(app.executeCommand(10200))
     return
 }
 
 <Ae_SwitchLabel>:
-DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
+    DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
     ; Wait for 'd' to be released
     KeyWait, s
     if (A_TimeSinceThisHotkey > DoubleClickTime) {
@@ -275,8 +293,7 @@ return
     KeyWait, 0, % "d T"DoubleClickTime/1000
     If ! Errorlevel
     {       
-        AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\resetTransformations.jsx
-        getAeScript(AeScriptPath)
+        getAeScript("custom\ae_scripts\commands\resetTransformations.jsx")
         return
     }
 
@@ -288,25 +305,6 @@ return
 }
 <Ae_Double_F2>:
 {
-
-;     DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-;     ; Wait for 'd' to be released
-;     KeyWait, F2
-;     if (A_TimeSinceThisHotkey > DoubleClickTime) {
-;         return
-;     }
-;     KeyWait, F2, % "d T"DoubleClickTime/1000
-;     If ! Errorlevel
-;         {
-;             Send, {Home}
-;             return
-;         }
-;     else
-;         {
-;             Send, {PgUp}
-;             return
-;         }
-; return
     t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
     settimer, ae_tappedkey_F2, %t%
     if (t == "off")
@@ -329,26 +327,6 @@ return
 
 <Ae_Double_F3>:
 {
-;     DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-;     ; Wait for 'd' to be released
-;     KeyWait, F3
-;     if (A_TimeSinceThisHotkey > DoubleClickTime) {
-;         ; Send,{Delete}
-;         ; Click 1
-;         return
-;     }
-;     KeyWait, F3, % "d T"DoubleClickTime/1000
-;     If ! Errorlevel
-;         {
-;             Send, {End}
-;             return
-;         }
-;     else
-;         {
-;             Send, {PgDn}
-;             return
-;         }
-; return
     t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
     settimer, ae_tappedkey_F3, %t%
     if (t == "off")
@@ -406,8 +384,7 @@ return
     return
 
     ae_double_8:
-        AeScriptPath = %A_ScriptDir%\custom\ae_scripts\(BOBOToolsFunctions)\LoopMaker.jsx
-        getAeScript(AeScriptPath)
+        getAeScript("custom\ae_scripts\(BOBOToolsFunctions)\LoopMaker.jsx")
     return
 }
 <Ae_Double_F9>:
@@ -419,12 +396,11 @@ return
     return
 
     ae_tappedkey_F9:
-    Send, ^{m}
+        Send, ^{m}
     return
 
     ae_double_F9:
-        AeScriptPath = %A_ScriptDir%\custom\ae_scripts\(BOBOToolsFunctions)\SPRenderQueueTools.jsx
-        getAeScript(AeScriptPath)
+        getAeScript("custom\ae_scripts\(BOBOToolsFunctions)\SPRenderQueueTools.jsx")
     return
 }
 Return
@@ -464,22 +440,19 @@ return
     ; Wait for 'd' to be released
     KeyWait, h
     if (A_TimeSinceThisHotkey > DoubleClickTime) {
-        AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\layer_Lock.jsx
-        getAeScript(AeScriptPath)
+        getAeScript("custom\ae_scripts\commands\layer_Lock.jsx")
         Click 1
         return
     }
     KeyWait, h, % "d T"DoubleClickTime/1000
     If ! Errorlevel
         {
-            AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\layer_Solo.jsx
-            getAeScript(AeScriptPath)
+            getAeScript("custom\ae_scripts\commands\layer_Solo.jsx")
             return
         }
     else
         {
-            AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\layer_Hides.jsx
-            getAeScript(AeScriptPath)
+            getAeScript("custom\ae_scripts\commands\layer_Hides.jsx")
             return
         }
 return
@@ -522,8 +495,7 @@ Return
     KeyWait, Ctrl, % "d T"DoubleClickTime/1000
     If ! Errorlevel
         {
-            AeScriptPath = %A_ScriptDir%\\custom\\ae_scripts\add_keys.jsx 
-            getAeScript(AeScriptPath)
+            getAeScript("custom\ae_scripts\add_keys.jsx")
             return
         }
     else
@@ -595,10 +567,74 @@ return
 
     ae_double_k:
     send, ^k
-    return
 }
 Return
 
+<Ae_Double_e>:
+{
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, ae_tappedkey_e, %t%
+    if (t == "off")
+    goto ae_double_e
+    return
+
+    ae_tappedkey_e:
+    Send, e
+    return
+
+    ae_double_e:
+        If ProcessExist("TOTALCMD.exe"){
+            getAeScript("custom\ae_scripts\commands\RevealInFinderTC.jsx")
+        }else{
+            getAeScript("custom\ae_scripts\commands\RevealInFinder.jsx")
+        }
+}
+Return
+
+; 快速定位Ae文件
+<Ae_Double_FindAeFiles>:
+{
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, ae_tappedkey_FindAe, %t%
+    if (t == "off")
+    goto ae_double_FindAe
+    return
+
+    ae_tappedkey_FindAe:
+    Send, e
+    return
+
+    ae_double_FindAe:
+        If ProcessExist("TOTALCMD.exe"){
+            SaveFileFindForTc()
+        }else{
+            SaveFileFindForExplorer()
+        }
+}
+Return
+
+<Ae_Double_2>:
+{
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, ae_tappedkey_2, %t%
+    if (t == "off")
+    goto ae_double_2
+    return
+
+    ae_tappedkey_2:
+        If ProcessExist("TOTALCMD.exe"){
+            getAeScript("custom\ae_scripts\commands\RevealInFinderTC.jsx")
+        }else{
+            getAeScript("custom\ae_scripts\commands\RevealInFinder.jsx")
+        }
+    return
+
+    ae_double_2:
+    send,2
+    return
+
+}
+Return
 
 <Ae_Double_F1>:
     ; 单F1超级模式 双按F1优化AE
@@ -624,17 +660,30 @@ Return
                     Click up
                     Sleep, 20                 
                     Gui,Ae: Hide
+                    sleep 200
+                    Click 1
                 }
         ; }
     return
 ; Double_Q 渲染输出
 ; #if WinActive("ahk_class Qt5QWindowIcon")
 <Ae_Double_1>:
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\OrganizeProjectAssets.jsxbin 
-    getAeScript(AeScriptPath)
-    sleep 500
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\deleteDiskCache.jsx
-    getAeScript(AeScriptPath)
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, ae_tappedkey_1, %t%
+    if (t == "off")
+    goto ae_double_1
+    return
+
+    ae_tappedkey_1:
+        getAeScript("custom\ae_scripts\commands\OrganizeProjectAssets.jsxbin")
+    return
+
+    ae_double_1:
+        getAeScript("custom\ae_scripts\commands\OrganizeProjectAssets.jsxbin")
+        sleep 500
+        getAeScript("custom\ae_scripts\commands\deleteDiskCache.jsx")
+    return
+
 return
 
 <Ae_Double_q>:
@@ -851,21 +900,6 @@ Return
 }
 <Ae_Double_->:
 {
-    ; DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-    ; KeyWait, -
-    ; if (A_TimeSinceThisHotkey > DoubleClickTime) {
-    ;     ;Null Command
-    ;     return
-    ; }
-    ; KeyWait, -, % "d T"DoubleClickTime/1000
-    ; If ! Errorlevel
-    ; {       
-    ;     ;Null Command
-    ;     return
-    ; }
-
-    ; else
-    ; {
         send, {,}
         return
     ;} 
@@ -890,49 +924,30 @@ Return
     return  
     ;} 
 }
-; <Ae_Double_最小化>:
-; {   
-;     t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
-;     settimer, ae_tappedkey_minimize, %t%
-
-;     if (t == "off")
-;     goto ae_double_minimize
-;     return
-
-;     ae_tappedkey_minimize:
-;     Send,-
-;     return
-
-;     ae_double_minimize:
-;     Send,!{Space}
-;     sleep 100
-;     Send,n
-;     return  
-; }
 
 <Ae_LShift>:
-WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
-tool_pathandname = "%activePath%"
-if (A_PriorHotkey <> "~LShift" or A_TimeSincePriorHotkey > 400) 
-{ 
-	KeyWait, LShift
-	return 
-} 
-;執行腳本
-send +{F3}
+    WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
+    tool_pathandname = "%activePath%"
+    if (A_PriorHotkey <> "~LShift" or A_TimeSincePriorHotkey > 400) 
+    { 
+        KeyWait, LShift
+        return 
+    } 
+    ;執行腳本
+    send +{F3}
 return
 
 <Ae_LCtrl>:
 ; ~LCtrl::  
-WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
-tool_pathandname = "%activePath%"
-if (A_PriorHotkey <> "~LCtrl" or A_TimeSincePriorHotkey > 400) 
-{ 
-	KeyWait, LCtrl
-	return 
-} 
-;執行腳本
-run, %comspec% /c %tool_pathandname% -ro %A_ScriptDir%\\custom\\ae_scripts\add_keys.jsx ,,Hide
+    WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
+    tool_pathandname = "%activePath%"
+    if (A_PriorHotkey <> "~LCtrl" or A_TimeSincePriorHotkey > 400) 
+    { 
+        KeyWait, LCtrl
+        return 
+    } 
+    ;執行腳本
+    run, %comspec% /c %tool_pathandname% -ro %A_ScriptDir%\\custom\\ae_scripts\add_keys.jsx ,,Hide
 return
 
 
@@ -979,8 +994,7 @@ return
     KeyWait, r, % "d T"DoubleClickTime/1000
     If ! Errorlevel
     {
-        AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\RevealLayerSourceInProject.jsx
-        getAeScript(AeScriptPath)
+        getAeScript("custom\ae_scripts\commands\RevealLayerSourceInProject.jsx")
         return
     }
     else
@@ -1016,41 +1030,36 @@ return
 
 <Ae_Help3>:
 {
-Run,https://www.kancloud.cn/funbobosky/vimd_aftereffect
-return
+    Run,https://www.kancloud.cn/funbobosky/vimd_aftereffect
+    return
 }
 
 
 <ShowHelp2>:
 {
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\ShowHelp2.jsx 
-    getAeScript(AeScriptPath)
+    getAeScript("custom\ae_scripts\ShowHelp2.jsx")
     return
 }
 <Ae_ReloadFootage>:
 {
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\ReloadFootage.jsx
-    getAeScript(AeScriptPath)
+    getAeScript("custom\ae_scripts\commands\ReloadFootage.jsx")
     return
 }
 ;调用Script
 <AfterEffects_全局控制初始化>:
 {
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\Global.jsx
-    getAeScript(AeScriptPath)
+    getAeScript("custom\ae_scripts\commands\Global.jsx")
     return  
 }
 <Ae_Script_Render>:
 {
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\(BOBOToolsFunctions)\SPRenderQueueTools.jsx 
-    getAeScript(AeScriptPath)
+    getAeScript("custom\ae_scripts\(BOBOToolsFunctions)\SPRenderQueueTools.jsx")
     return  
 }
 
 <Ae_Script_BoboTools>:
 {
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\02_BOBO_Tools.jsx 
-    getAeScript(AeScriptPath)
+    getAeScript("custom\ae_scripts\02_BOBO_Tools.jsx ")
     return
 }
 
@@ -1063,50 +1072,42 @@ return
 
 <Ae_Script_QuickMenu>:
 {
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\00_QuickMenu.jsxbin
-    getAeScript(AeScriptPath)
+    getAeScript("custom\ae_scripts\00_QuickMenu.jsxbin")
     return
 }
 <Ae_Script_AEProject>:
 {
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\AEProject.jsxbin
-    getAeScript(AeScriptPath)
+    getAeScript("custom\ae_scripts\AEProject.jsxbin")
     return
 }
 <Ae_Script_batchFootage>:
 {
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\batchFootage.jsxbin
-    getAeScript(AeScriptPath)
+    getAeScript("custom\ae_scripts\commands\batchFootage.jsxbin")
     return
 }
 <Ae_Script_CompSetter>:
 {
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\CompSetter.jsx
-    getAeScript(AeScriptPath)
+    getAeScript("custom\ae_scripts\commands\CompSetter.jsx")
     return
 }
 <Ae_Script_AutoMatte>:
 {
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\cz_AutoMatte.jsxbin
-    getAeScript(AeScriptPath)
+    getAeScript("custom\ae_scripts\commands\cz_AutoMatte.jsxbin")
     return
 }
 <Ae_Script_GlobalRename>:
 {
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\AEGlobalRenamer.jsxbin
-    getAeScript(AeScriptPath)
+    getAeScript("custom\ae_scripts\AEGlobalRenamer.jsxbin")
     return
 }
 <Ae_OrganizeProjectAssets>:
 {
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\OrganizeProjectAssets.jsxbin
-    getAeScript(AeScriptPath)
+    getAeScript("custom\ae_scripts\commands\OrganizeProjectAssets.jsxbin")
     return
 }
 <Ae_ProjectCleaner>:
 {
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\ProjectCleaner.jsx
-    getAeScript(AeScriptPath)
+    getAeScript("custom\ae_scripts\commands\ProjectCleaner.jsx")
     return
 }
 <Ae_AutoUpdate>:
@@ -1156,7 +1157,7 @@ return
     KeyWait, LButton
 
     ;執行腳本
-    run, %comspec% /c %tool_pathandname% -ro %A_ScriptDir%\\custom\\ae_scripts\differenceToggle.jsx ,,Hide
+    getAeScript("custom\ae_scripts\differenceToggle.jsx")
 return
 }
 
@@ -1189,10 +1190,9 @@ return
 {
     WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
     tool_pathandname = "%activePath%"
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\layer_GuideLayer.jsx
     KeyWait, LButton
     ;執行腳本
-        getAeScript(AeScriptPath)
+        getAeScript("custom\ae_scripts\commands\layer_GuideLayer.jsx")
     return
 }
 
@@ -1204,7 +1204,7 @@ return
     KeyWait, LButton
 
     ;執行腳本
-    run, %comspec% /c %tool_pathandname% -ro %A_ScriptDir%\\custom\\ae_scripts\jumpToKey.jsx ,,Hide
+    getAeScript("custom\\ae_scripts\jumpToKey.jsx")
     return
 
 }
@@ -1223,64 +1223,63 @@ return
 ;按左鍵再按n
 <Ae_simpleNamer>:
 ;~LButton & n:: 
-WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
-tool_pathandname = "%activePath%"
-KeyWait, LButton
+    WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
+    tool_pathandname = "%activePath%"
+    KeyWait, LButton
 
-CoordMode, Mouse,Screen
-MouseGetPos, xpos, ypos  
-FileDelete, %A_AppData%\\Ola script UI\cursorPos.txt
-FileAppend, %xpos%`,%ypos%, %A_AppData%\\Ola script UI\cursorPos.txt
+    CoordMode, Mouse,Screen
+    MouseGetPos, xpos, ypos  
+    FileDelete, %A_AppData%\\Ola script UI\cursorPos.txt
+    FileAppend, %xpos%`,%ypos%, %A_AppData%\\Ola script UI\cursorPos.txt
 
-;執行腳本
-run, %comspec% /c %tool_pathandname% -ro %A_ScriptDir%\\custom\\ae_scripts\simpleNamer 1.1.jsxbin ,,Hide
-
+    ;執行腳本
+    getAeScript("custom\ae_scripts\simpleNamer 1.1.jsxbin")
 return
 
 ;按左鍵再按n
 <Ae_PointCenter>:
 ; ~LButton & c:: 
-WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
-tool_pathandname = "%activePath%"
-KeyWait, LButton
+    WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
+    tool_pathandname = "%activePath%"
+    KeyWait, LButton
 
-send ^!{Home}
+    send ^!{Home}
 
 return
 
 
 <Ae_foolParent>:
 ;~LButton & a:: 
-WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
-tool_pathandname = "%activePath%"
-KeyWait, LButton
+    WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
+    tool_pathandname = "%activePath%"
+    KeyWait, LButton
 
-;if FileExist("%A_AppData%\\Ola script UI\cursorPos.txt")
-CoordMode, Mouse,Screen
-MouseGetPos, xpos, ypos  
-FileDelete, %A_AppData%\\Ola script UI\cursorPos.txtcursorPos.txt
-FileAppend, %xpos%`,%ypos%, %A_AppData%\\Ola script UI\cursorPos.txt
+    ;if FileExist("%A_AppData%\\Ola script UI\cursorPos.txt")
+    CoordMode, Mouse,Screen
+    MouseGetPos, xpos, ypos  
+    FileDelete, %A_AppData%\\Ola script UI\cursorPos.txtcursorPos.txt
+    FileAppend, %xpos%`,%ypos%, %A_AppData%\\Ola script UI\cursorPos.txt
 
-;執行腳本
-run, %comspec% /c %tool_pathandname% -ro %A_ScriptDir%\\custom\\ae_scripts\foolParent.jsxbin ,,Hide
+    ;執行腳本
+    getAeScript("custom\\ae_scripts\foolParent.jsxbin")
 return
 
 <Ae_CopyPaste>:
 ; ~LCtrl & c::
-DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-; Wait for 'c' to be released
-KeyWait, c
-if (A_TimeSinceThisHotkey > DoubleClickTime) {
-    Msgbox Longpress
-    return
-}
-; Wait for 'c' to be pressed down again (option "d")
-; But timeout after T0.5 seconds (If DoubleClickTime is 500)
-KeyWait, c, % "d T"DoubleClickTime/1000
-If ! Errorlevel
-	send ^{v}
-else
-	send ^{c}
+    DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
+    ; Wait for 'c' to be released
+    KeyWait, c
+    if (A_TimeSinceThisHotkey > DoubleClickTime) {
+        Msgbox Longpress
+        return
+    }
+    ; Wait for 'c' to be pressed down again (option "d")
+    ; But timeout after T0.5 seconds (If DoubleClickTime is 500)
+    KeyWait, c, % "d T"DoubleClickTime/1000
+    If ! Errorlevel
+        send ^{v}
+    else
+        send ^{c}
 Return
 
 ;调用动画预设文件
@@ -1292,45 +1291,20 @@ Return
 <Ae_Preset_Ani1>:
 {
 	Gui,Ae: Hide
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\PresetAnimation\add_PresetAnimation_1.jsx
-    getAeScript(AeScriptPath)
-    return
-}
-<Ae_Preset_Ani2>:
-{
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\PresetAnimation\add_PresetAnimation_2.jsx
-    getAeScript(AeScriptPath)
-    return
-}
-<Ae_Preset_Ani3>:
-{
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\PresetAnimation\add_PresetAnimation_3.jsx
-    getAeScript(AeScriptPath)
-    return
-}
-<Ae_Preset_Ani4>:
-{
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\PresetAnimation\add_PresetAnimation_4.jsx
-    getAeScript(AeScriptPath)
-    return
-}
-<Ae_Preset_Ani5>:
-{
-    AeScriptPath = %A_ScriptDir%\custom\ae_scripts\PresetAnimation\add_PresetAnimation_5.jsx
-    getAeScript(AeScriptPath)
+    getAeScript("custom\ae_scripts\PresetAnimation\add_PresetAnimation_1.jsx")
     return
 }
    
 <Ae_Help>:
-run,https://www.kancloud.cn/funbobosky/vimd_aftereffect
+    run,https://www.kancloud.cn/funbobosky/vimd_aftereffect
 return
 
 <Ae_Help_Script>:
-run,http://estk.aenhancers.com/
+    run,http://estk.aenhancers.com/#SingleInstance, Force
 return
 
 <Ae_FXConsole>:
-send {LCtrl}{Space}
+    send {LCtrl}{Space}
 return
 
 <Ae_ReplaceFootageFile>:
@@ -1341,10 +1315,31 @@ return
     send, ^{h}
     return
 }
-<Ae_Test>:
-MsgBox 测试
-return
 
+<Ae_doubleTest>:
+{   
+	keyPress:=analyseKeyPress()
+	if (keyPress=1){
+            MsgBox 测试
+	}
+    if (keyPress=2){
+            MsgBox 测试2
+	}
+
+    return
+}
+; Ae_Test:
+; MsgBox 测试
+; return
+
+; Ae_Test2:
+; MsgBox 测试2
+; return
+<Ae_Tab>:
+{
+    send {Tab}
+    return
+}
 <Ae_UpDater>:
 Gui,Updating: +LastFound +AlwaysOnTop -Caption +ToolWindow
 Gui,Updating: Color, %color2%
@@ -1402,7 +1397,8 @@ Return
 ;     run,%A_ScriptDir%\apps\TaskSwch\TaskSwch.exe
 ;     return
 ; #If ;## 语境约束结束
-; Project界面操作
+
+; Project界面操作,有点神经病大概率会是windows Class3
 #If ActiveControlIs("DroverLord - Window Class3")
 ; ~LButton:: 
 ; ;~ 是否双击判定
@@ -1410,35 +1406,35 @@ Return
 ;         send,{Space}
 ;         return
 ; return
-6::
-MsgBox 测试项目窗口
+; 6::
+; MsgBox 测试项目窗口
 return
-e::
-{
-    DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
-    ; Wait for 'c' to be released
-    KeyWait, e
-    if (A_TimeSinceThisHotkey > DoubleClickTime) {
-        ; send, ^{h}
-        return
-    }
-    ; Wait for 'c' to be pressed down again (option "d")
-    ; But timeout after T0.5 seconds (If DoubleClickTime is 500)
-    KeyWait, e, % "d T"DoubleClickTime/1000
-    If ! Errorlevel
-    {       
-        AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\RevealInExplorer.jsx
-        getAeScript(AeScriptPath)
-        return
-    }
+; e::
+; {
+;     DoubleClickTime := DllCall("GetDoubleClickTime") ; in milliseconds
+;     ; Wait for 'c' to be released
+;     KeyWait, e
+;     if (A_TimeSinceThisHotkey > DoubleClickTime) {
+;         ; send, ^{h}
+;         return
+;     }
+;     ; Wait for 'c' to be pressed down again (option "d")
+;     ; But timeout after T0.5 seconds (If DoubleClickTime is 500)
+;     KeyWait, e, % "d T"DoubleClickTime/1000
+;     If ! Errorlevel
+;     {       
+;         AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\RevealInExplorer.jsx
+;         getAeScript(AeScriptPath)
+;         return
+;     }
 
-    else
-    {
-        send, e
-        return
-    } 
-}
-Return
+;     else
+;     {
+;         send, e
+;         return
+;     } 
+; }
+; Return
 F5::
 {
     ; 1.ReloadFootage | 2.ReduceProject  |  long：CollectFiles
@@ -1450,8 +1446,7 @@ F5::
             {
                 ToolTip, 执行打包...请稍后！
                 sleep 100
-                AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\CollectFiles.jsx
-                getAeScript(AeScriptPath)
+                getAeScript("custom\ae_scripts\commands\CollectFiles.jsx")
                 SetTimer, RemoveToolTip, -1000
                 return
             }
@@ -1469,8 +1464,7 @@ F5::
             {
                 ToolTip, 正在简化中...请稍后！
                 sleep 100
-                AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\ReduceProject.jsx
-                getAeScript(AeScriptPath)
+                getAeScript("custom\ae_scripts\commands\ReduceProject.jsx")
                 SetTimer, RemoveToolTip, -1000
                 return
             }
@@ -1482,8 +1476,7 @@ F5::
     }
     else
     {
-        AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\ReloadFootage.jsx
-        getAeScript(AeScriptPath)
+        getAeScript("custom\ae_scripts\commands\ReloadFootage.jsx")
         ToolTip, 正在刷新素材请稍后！
         SetTimer, RemoveToolTip, -2000
         return
@@ -1497,8 +1490,7 @@ n::
     KeyWait, n
     if (A_TimeSinceThisHotkey > DoubleClickTime) {
         ;CompSetter
-        AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\CompSetter.jsx
-        getAeScript(AeScriptPath)
+        getAeScript("custom\ae_scripts\commands\CompSetter.jsx")
         return
     }
     KeyWait, n, % "d T"DoubleClickTime/1000
@@ -1512,8 +1504,7 @@ n::
     else
     {
         ;NewCompFromSelection
-        AeScriptPath = %A_ScriptDir%\custom\ae_scripts\commands\NewCompFromSelection.jsx
-        getAeScript(AeScriptPath)
+        getAeScript("custom\ae_scripts\commands\NewCompFromSelection.jsx")
         return
     } 
 }
@@ -1534,3 +1525,6 @@ ActiveControlIs(Control) {
 RemoveToolTip:
 ToolTip
 return
+
+
+

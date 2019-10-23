@@ -1,8 +1,8 @@
 --本地化初始设置
 -- Include "E:\BoBOAHK\Vimdesktop\custom\maxScripts\lib\setEvn.ms"
-if symbolicPaths.isUserPathName "$maxScripts" == false do symbolicPaths.addUserPath "$maxScripts" "E:\\BoBOAHK\\Vimdesktop\\custom\\maxScripts" 
-symbolicPaths.setUserPathValue "$maxScripts" "E:\\BoBOAHK\\Vimdesktop\\custom\\maxScripts"
-symbolicPaths.expandFileName "$maxScripts\\total_commander.ini"
+-- if symbolicPaths.isUserPathName "$maxScripts" == false do symbolicPaths.addUserPath "$maxScripts" "E:\\BoBOAHK\\Vimdesktop\\custom\\maxScripts" 
+-- symbolicPaths.setUserPathValue "$maxScripts" "E:\\BoBOAHK\\Vimdesktop\\custom\\maxScripts"
+-- symbolicPaths.expandFileName "$maxScripts\\total_commander.ini"
 
 startTi = timeStamp()
 if render8Rollout != undefined do destroydialog render8Rollout

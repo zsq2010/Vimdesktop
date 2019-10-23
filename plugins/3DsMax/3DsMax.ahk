@@ -168,14 +168,14 @@ return
 }
 return
 
-<3DsMax_attachSelection>:
-{
-    WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
-    tool_pathandname = "%activePath%"
-    getMaxScriptCommands("attachSelection.ms")
-    return
-}
-return
+; <3DsMax_attachSelection>:
+; {
+;     WinGet, activePath, ProcessPath, % "ahk_id" winActive("A")
+;     tool_pathandname = "%activePath%"
+;     getMaxScriptCommands("attachSelection.ms")
+;     return
+; }
+; return
 
 <3DsMax_copyModifiers>:
 {
@@ -399,8 +399,7 @@ Return
 
 <3DsMax_Space>:
 {
-    ; send,{Space}
-    send,{/}
+    send,{Space}
     return
 }
 
@@ -777,25 +776,114 @@ Return
     return 
 }
 
+<3DsMax_SelectLink>:
+{
+    runPath = max link
+    run2MaxScript(runPath)
+    return
+}
+<3DsMax_SelectUnLink>:
+{
+    runPath = max unlink
+    run2MaxScript(runPath)
+    return
+}
+<3DsMax_Align>:
+{
+    runPath = max align
+    run2MaxScript(runPath)
+    return
+}
+<3DsMax_warp>:
+{
+    runPath = max bind space warp mode
+    run2MaxScript(runPath)
+    return
+}
+
+;Ini传递数值给SetEvn
+<3DsMax_Ini>:
+{
+    ; getWorkFLowIni=%A_ScriptDir%\custom\maxScripts
+
+    ; openSetEvn=%A_ScriptDir%\setEvn.ms
+
+    ; gotoSetEvn=%A_ScriptDir%\custom\maxScripts\Startup\setEvn.ms
+
+    ; fileread, ContentsMaxscript, %openSetEvn%
+
+    ; RegExMatch(ContentsMaxscript,"(\\|.:\\).*\\",newPath) ;正则替换内容
+
+    ; FileRead, Contents, %openSetEvn% 
+    ;     if not ErrorLevel 
+    ;         { 
+                
+    ;             Contents := StrReplace(Contents, newPath, getWorkFLowIni)
+
+    ;             FileDelete, %gotoSetEvn% ;先删除文件
+                
+    ;             sleep 500
+
+    ;             FileAppend, %Contents%, %gotoSetEvn% ;输出文件
+
+    ;             Contents = ; 清理内存
+
+    ;             sleep 200
+
+    ;             run, %A_ScriptDir%\3DsMax初始化.bat
+    ;         }
+; ######第二种写法
+
+    Gui, Color, 37474F
+    Gui -Caption
+
+    Gui, Font, s32,Microsoft YaHei
+	Gui, +AlwaysOnTop +Disabled -SysMenu +Owner 
+	Gui, Add, Text,cffffff,3DsMax初始化配置
+	Gui, Show, xCenter yCenter, 状态, NoActivate,
+	sleep, 1200
+	Gui, Destroy
+    
+    gotoSetEvn=%A_ScriptDir%\custom\maxScripts\Startup\setEvn.ms
+    FileDelete, %gotoSetEvn% ;先删除文件
+    FileAppend,  ; 这里需要逗号.
+    (
+    --设置本地环境$maxScripts.
+    --读取workflow ini地址
+    evnPath="%A_ScriptDir%\custom\maxScripts"
+
+    if symbolicPaths.isUserPathName "$maxScripts" == false do symbolicPaths.addUserPath "$maxScripts" evnPath
+    symbolicPaths.setUserPathValue "$maxScripts" evnPath
+    ), %A_ScriptDir%\custom\maxScripts\Startup\setEvn.ms,UTF-8
+
+    sleep 500
+
+    run, %A_ScriptDir%\3DsMax初始化.bat
+
+    return
+}
+
+
 
 ;更新
 <3DsMax_UpDater>:
-Gui,Updating: +LastFound +AlwaysOnTop -Caption +ToolWindow
-Gui,Updating: Color, %color2%
-Gui,Updating: Font,cwhite s%FontSize% wbold q5,Segoe UI
-Gui,Updating: Add, Text, ,%_MaxUpdating%
-Gui,Updating: Show,AutoSize Center NoActivate
-UrlDownloadToFile, %UrlDownloadToFile_Ae1%, %A_ScriptDir%\plugins\3DsMax\latest-3DsMax.ahk ;
+; Gui,Updating: +LastFound +AlwaysOnTop -Caption +ToolWindow
+; Gui,Updating: Color, %color2%
+; Gui,Updating: Font,cwhite s%FontSize% wbold q5,Segoe UI
+; Gui,Updating: Add, Text, ,%_MaxUpdating%
+; Gui,Updating: Show,AutoSize Center NoActivate
+; UrlDownloadToFile, %UrlDownloadToFile_Ae1%, %A_ScriptDir%\plugins\3DsMax\latest-3DsMax.ahk ;
 
-if ErrorLevel
-{
-    Gosub, MaxExitUpdater
-}
-Else
-{
-    FileMove,%A_ScriptDir%\plugins\3DsMax\latest-3DsMax.ahk, %A_ScriptDir%\plugins\3DsMax\3DsMax.ahk,1
-    Gosub, MaxExitUpdater
-}
+; if ErrorLevel
+; {
+;     Gosub, MaxExitUpdater
+; }
+; Else
+; {
+;     FileMove,%A_ScriptDir%\plugins\3DsMax\latest-3DsMax.ahk, %A_ScriptDir%\plugins\3DsMax\3DsMax.ahk,1
+;     Gosub, MaxExitUpdater
+; }
+MsgBox 功能已写好，未测试，后面版本更新！！！！
 return
 
 MaxExitUpdater:

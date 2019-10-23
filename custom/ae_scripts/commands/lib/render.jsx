@@ -20,7 +20,7 @@ function SPCreateFolderAndOutputForSelectedCompsName(){
 				var sequenceFolderPath = new Folder ( newLocation.toString() + "/" + item.name )
 				sequenceFolderPath.create();
 				//var sequencePath = new File ( newLocation.toString() + "/" + sequenceFolderPath.name + "/" + item.name + "_[#####]" );
-				var sequencePath = new File ( newLocation.toString() + "/" + sequenceFolderPath.name + "/" + "[#####]" );				
+				var sequencePath = new File ( newLocation.toString() + "/" + sequenceFolderPath.name + "/" + "#[#####]" );				
 				lastOMItem.file = sequencePath;							
 				// Remove _[#####] for non frame sequence type
 				var outputPath = lastOMItem.file.fsName;
@@ -72,7 +72,7 @@ function SPCreateFolderAndOutputForSelectedCompsAttackDirection() {
 				sequenceFolderPath.create();
 
 				//var sequencePath = new File ( newLocation.toString() + "/" + sequenceFolderPath.name + "/" + item.name + "_[#####]" );
-				var sequencePath = new File(newLocation.toString() + "/" + AniName + "/" + dirStr + "/" + item.name + "[#####]");
+				var sequencePath = new File(newLocation.toString() + "/" + AniName + "/" + dirStr + "/" + item.name + "#[#####]");
 				//var sequencePath = new File ( newLocation.toString() + "/" + dirStr + "/" + itemName + "/" + item.name + "_[#####]" );
 
 				lastOMItem.file = sequencePath;

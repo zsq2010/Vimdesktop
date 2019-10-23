@@ -1,7 +1,7 @@
 --本地化初始设置
--- Include "E:\BoBOAHK\Vimdesktop\custom\maxScripts\lib\setEvn.ms"
-if symbolicPaths.isUserPathName "$maxScripts" == false do symbolicPaths.addUserPath "$maxScripts" "E:\\BoBOAHK\\Vimdesktop\\custom\\maxScripts" 
-symbolicPaths.setUserPathValue "$maxScripts" "E:\\BoBOAHK\\Vimdesktop\\custom\\maxScripts"
+Include "$scripts\\Startup\setEvn.ms"
+-- if symbolicPaths.isUserPathName "$maxScripts" == false do symbolicPaths.addUserPath "$maxScripts" "E:\\BoBOAHK\\Vimdesktop\\custom\\maxScripts" 
+-- symbolicPaths.setUserPathValue "$maxScripts" "E:\\BoBOAHK\\Vimdesktop\\custom\\maxScripts"
 
 if rs_Rollout != undefined do destroyDialog rs_Rollout
 if R8DSet_rollout != undefined do destroyDialog R8DSet_rollout

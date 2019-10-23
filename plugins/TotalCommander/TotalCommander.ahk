@@ -183,6 +183,8 @@
     vim.Comment("<TC_TCIMG_DirGetUp>","文件向上移动") 
     vim.Comment("<TC_TCIMG_MoveExtensions>","按扩展名移动文件") 
     vim.Comment("<TC_TCIMG_DirGetInputName>","移到输入文件")
+    vim.Comment("<TC_Everyting>","Everything搜索当前目录")
+    
     ; vim.Comment("<TC_FastCopy_CopyInfo>","FastCopy快速复制Info&Extra..") 
     ; vim.Comment("<TC_FastCopy_CopyCVT>","FastCopy快速复制CVT/SSP..")   
     
@@ -392,6 +394,23 @@ return
     return
 return
 
+<TC_Un7zip>:
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, TC_tappedkey_Un7zip, %t%
+    if (t == "off")
+    goto TC_double_Un7zip
+    return
+
+    TC_tappedkey_Un7zip:
+    GoSub,<TC_BZUnpackFiles>
+    return
+
+    TC_double_Un7zip:
+    GoSub,<TC_To7zip>
+    return
+return
+
+
 
 ;点击文本搜索框
 <TC_TextSearch>:
@@ -478,6 +497,16 @@ return
  Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_Bandizip-ArchiveHere_Eachname`)"
     return
 
+<TC_To7zip>:
+;  Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_To7zip`)"
+    SendPos(2018)
+    Sleep,100
+    clipboard:=RegExReplace(Clipboard, "\\$")
+    ; msgbox %clipboard%
+    ; msgbox %zipPath%
+    CustomPlugin_SmartCompress()
+return
+
 ;调用bz解压并打开
 <TC_BZUnpackFiles>:
  ;  Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_AutoEx2This`)"
@@ -488,8 +517,32 @@ return
 ;~ TCBandizipExt = %Clipboard%\BandizipExt\
 ;~ Run %TCPath% /L="%TCBandizipExt%"
     return
+    
+    ; 单双窗口切换-BoBO
 <TC_SwitchWindows>:
-   Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_TCFS_longview`)"
+   	keyPress:=analyseKeyPress()
+    if (keyPress=1){
+        if Tc_var=2 ; 总共几次 
+        Tc_var=0
+        Tc_var+=1
+        if (Tc_var=1)
+        {
+            ; 单最大化显示
+            Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`cm_100Percent`)"
+            return
+        }
+        if (Tc_var=2)
+        {
+            ; 双屏幕
+            Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`cm_50Percent`)"
+            return
+        }
+	}
+    if (keyPress=2){
+            MsgBox 双按为空
+	}
+
+    return
 return
 ; ;隐藏菜单
 ; <TC_隐藏菜单>:
@@ -4628,6 +4681,34 @@ return
  Run "%TCDirPath%\Tools\TCFS2\TCFS2.exe" /ef "tem(`em_fastcopy_deletePNG`)"
 return
 
+;调用Everything搜索tc当前窗口路径
+<TC_Everyting>:
+	; SendMessage 1074, 21, 0, , ahk_class TTOTAL_CMD
+	; ControlGetText, varPathInTC, , ahk_id %ErrorLevel%
+	; StringReplace, varPathInTC, varPathInTC, >, "\ "
+    ; GoSub,<RunEverything>
+    folder:=getTcFolder()
+    ;  -p带"""  -search不带""
+	run "%TCDirPath%\Tools\Everything\Everything.exe" -p %folder% 
+return
+
+; 双按Backspace当前文件上移动
+<TC_Double_Backspace>:
+{
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, Tc_Backspace, %t%
+    if (t == "off")
+    goto TC_Double_Backspace
+    return
+
+    Tc_Backspace:
+    Send, {BackSpace}
+    return
+
+    TC_Double_Backspace:
+    Gosub, <TC_TCIMG_DirGetUp>
+    return
+}
 
 
 <TC_Sub_azHistory>:

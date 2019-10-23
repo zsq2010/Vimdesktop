@@ -1,9 +1,9 @@
-﻿curver = 1.0 ; 声明当前版本
+﻿curver = 1.0 ; 
 IfNotExist, vimd.ini
 IniWrite, CN, vimd.ini, config, Language
 else
 IniRead, Language, vimd.ini, config, Language
-; if (A_Language = "0804")
+; 中英文分开 如果只是中文就在IF填写 可以无视else部分
 If Language=CN
 {
 ;定义注释

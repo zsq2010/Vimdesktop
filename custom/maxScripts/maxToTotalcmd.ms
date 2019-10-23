@@ -17,17 +17,7 @@
 	global get_totalcmd_dir_folder
 
 --  本地化处理
-Include "E:\BoBOAHK\Vimdesktop\custom\maxScripts\lib\setEvn.ms"
-	-- if symbolicPaths.isUserPathName "$maxScripts" == false do symbolicPaths.addUserPath "$maxScripts" "E:\\BoBOAHK\\Vimdesktop\\custom\\maxScripts" 
-	-- symbolicPaths.setUserPathValue "$maxScripts" "E:\\BoBOAHK\\Vimdesktop\\custom\\maxScripts"
-	symbolicPaths.expandFileName "$maxScripts\\total_commander.ini"
-
-	
-	-- if (getfiles ((GetDir #plugcfg) + "\\total_commander.ini")).count == 0 then
-	-- (
-	-- 	setinisetting ((GetDir #plugcfg) + "\\total_commander.ini") "TotalCommander" "1" "empty"
-	-- )
-	-- global get_totalcmd_dir = getinisetting ((GetDir #plugcfg) + "\\total_commander.ini") "TotalCommander" "path"
+Include "$scripts\\Startup\setEvn.ms"
 
 	if (getfiles (symbolicPaths.expandFileName "$maxScripts\\total_commander.ini")).count == 0 then
 	(

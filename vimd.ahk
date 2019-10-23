@@ -35,24 +35,6 @@ ListLines Off
 SetStoreCapslockMode, off
 
 global Workflows_update_version:="3.5.6.02"
-global githubUrl:="https://raw.githubusercontent.com"
-; global giteeUrl:="https://gitee.com"
-; global RunAnyGiteeDir:="/hui-Zz/RunAny/raw/master"
-global GithubDir:="/BoBOVFX/Vimdesktop/master"
-global lpszUrl:=githubUrl
-global WorkflowsDownDir:=lpszUrl . GithubDir
-	if(A_DD=01 || A_DD=15){
-		;当天已经检查过就不再更新
-		if(FileExist(A_Temp "\temp_vimd.ahk")){
-			FileGetTime,tempMTime, %A_Temp%\temp_vimd.ahk, M  ; 获取修改时间.
-			t1 := A_Now
-			t1 -= %tempMTime%, Days
-			FormatTime,tempTimeDD,%tempMTime%,dd
-			if(t1=0 && (tempTimeDD=01 || tempTimeDD=15))
-				return
-		}
-		Gosub,Auto_Update
-	}
 
 FeedbackLink=https://www.kancloud.cn/funbobosky/vim_unity
 HelpLink=https://www.kancloud.cn/funbobosky/vim_unity
@@ -60,15 +42,12 @@ FontSize:="30"
 SleepTime=1000 ; 消失时间
 
 ; 定义颜色
-color1=004073
-color2=004073
-color3=007310
-color4=303030
+global color1=004073
+global color2=004073
+global color3=007310
+global color4=303030
 
-; 修饰符设定
-N1:=new UMSS("Space","2")
-N2:=new UMSS("Capslock","2")
-N3:=new UMSS("Tab","2")
+; global  N4:=new UMSS("`","2")
 ; ----------------------------------
 #Include %A_ScriptDir%\lib\checkUser.ahk
 #Include %A_ScriptDir%\lib\DownloadFile.ahk
@@ -86,7 +65,6 @@ N3:=new UMSS("Tab","2")
 #Include %A_ScriptDir%\lib\Logger.ahk
 #Include %A_ScriptDir%\lib\Updater.ahk
 #Include %A_ScriptDir%\lib\TrayMenu.ahk
-#Include %A_ScriptDir%\lib\UMSS.ahk
 #Include %A_ScriptDir%\lib\ImageButton.ahk
 #Include %A_ScriptDir%\plugins\plugins.ahk
 ; 用户自定义配置yy
