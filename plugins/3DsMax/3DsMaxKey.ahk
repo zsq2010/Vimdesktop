@@ -37,7 +37,6 @@
     vim.Map("<F4>", "<3DsMax_Key>", "3DsMax")
 
     vim.Map("<F5>", "<3DsMax_Play>", "3DsMax")
-    vim.map("<F7>","<3DsMax_maxToTotalcmd>","3DsMax")
     vim.Map("<F9>", "<3DsMax_Double_F9>", "3DsMax")
 
 
@@ -77,6 +76,7 @@
     vim.map("?","<ShowHelp>","3DsMax")
     vim.Map("0", "<3DsMax_Double_0>", "3DsMax")
     vim.Map("1", "<3DsMax_SwithObjectMode>", "3DsMax")
+    vim.map("2","<3DsMax_maxToTotalcmd>","3DsMax")
     
 
     vim.Map("<Tab>", "<3DsMax_Tab>", "3DsMax")

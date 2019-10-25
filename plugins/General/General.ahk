@@ -1093,40 +1093,23 @@ return
 #RButton::
     run %A_ScriptDir%\custom\apps\Popsel\PopSel.exe /n
 return
+!RButton::
+    run %A_ScriptDir%\custom\apps\TaskSwch\TaskSwch.exe /n
+return
 ;****************************************************
-;************增强按键****************************
-; 来自BoBO
-; ~F4:: ;(单击:1.无， 双击：2.关闭显示器 三击：3.休眠)
-;     Suspend Permit
-;     StringGetPos, Pos, a_scriptDIR, \,R2,1
-;     stringLeft, ScriptDir, a_scriptDIR, Pos
-;     If (winc_presses > 0 && A_PriorHotkey="~F4") {
-;         winc_presses += 1
-;         return
-;     Key_F4:
-;         If winc_presses = 1 
-;         {
-;             ;msgbox 1 ; 1. 无
-;         }      
-;         Else If winc_presses = 2  ; 2. 关闭显示器
-;         {
-;             Sleep 1000
-; 	        SendMessage, 0x112, 0xF170, 2,, Program Manager
-;         }  
-;         Else If winc_presses = 3 ; 3. 休眠
-;         {
-;             DllCall("PowrProf\SetSuspendState", "int", 0, "int", 0, "int", 0)
-;         } 
-;         ; Else If winc_presses > 3 
-;         ; {
-;         ;     msgbox 我按了很多    ; 瞎按很多次激活
-;         ; } 
-;         winc_presses := 0
-;     return
-;     }hotkeys/
-;     winc_presses := 1
-;     SetTimer, Key_F4, -400
-; return
+;************双击关闭显示器****************************
+Home:: 
+	keyPress:=analyseKeyPress()
+	if (keyPress=1){
+        return
+	}
+    if (keyPress=2){
+            Sleep 1000
+	        SendMessage, 0x112, 0xF170, 2,, Program Manager
+            return
+	}
+    return
+return
 ;********************************************************
 ;************全屏最大化****************************
 !Enter::
@@ -1179,4 +1162,14 @@ ClosestMonitorTo(X, Y)
         }
     }
     return m
+}
+
+;在任务栏上滚轮调整音量 {{{2
+#If MouseIsOver("ahk_class Shell_TrayWnd")
+WheelUp::Send {Volume_Up}
+WheelDown::Send {Volume_Down}
+#If
+MouseIsOver(WinTitle) {
+    MouseGetPos,,, Win
+    return WinExist(WinTitle . " ahk_id " . Win)
 }

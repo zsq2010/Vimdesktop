@@ -50,7 +50,7 @@ AfterEffects:
     ;载入按键
     #Include %A_ScriptDir%\plugins\AfterEffects\AfterEffectsKey.ahk
     ;载入增强按键
-    ;#Include %A_ScriptDir%\plugins\AfterEffects\AfterEffectsPlus.ahk
+    ; #Include %A_ScriptDir%\plugins\AfterEffects\AfterEffectsPlus.ahk
 
 return
 
@@ -302,6 +302,27 @@ return
         send, {0}
         return
     } 
+}
+<Ae_Double_Tab>:
+{
+    t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    settimer, ae_tappedkey_Tab, %t%
+    if (t == "off")
+    goto ae_double_Tab
+    return
+    ae_tappedkey_Tab:
+        {
+            Send, {Tab}
+            return
+        }
+    return
+
+    ae_double_Tab:
+        {
+            GoSub,<Ae_Script_QuickMenu>
+            return
+        }
+    return
 }
 <Ae_Double_F2>:
 {
@@ -637,7 +658,35 @@ Return
 Return
 
 <Ae_Double_F1>:
-    MsgBox,大侠停住 , 此乃捐赠功能 【 F1超级模式 】！！！`n`n 如需开启请联系本主在下！`n`nEmail:lingchuanbo@gmail.com
+    MsgBox,大侠停住 , 此乃捐赠功能 【 F1超级模式 】！！！`n`n 如需开启请联系本主在下！`n`nEmail:lingchuanbo@gmail.com `n 捐赠地址 https://github.com/BoBOVFX/Vimdesktop_BoBO
+    return
+    ; 单F1超级模式 双按F1优化AE
+    ; t := A_PriorHotkey == A_ThisHotkey && A_TimeSincePriorHotkey < 200 ? "off" : -200
+    ; settimer, ae_tappedkey_F1, %t%
+    ; if (t == "off")
+    ; goto ae_double_F1
+    ; return
+    ; ; ae_tappedkey_F1:
+    ; ;     {
+    ;             WinActivate, ahk_exe AfterFX.exe
+    ;             MouseGetPos, MX, MY
+    ;             MouseX:=MX-325
+    ;             MouseY:=MY-150 
+    ;             Gui,Ae: Show,X%MouseX% Y%MouseY% ,NoActivate ; NoActivate avoids deactivating the currently active window.
+    ;             ;保存当前信息
+    ;             KeyWait,F1                              
+    ;             Sleep, 20                                                                                              
+    ;             IfWinActive, ahk_class AutoHotkeyGUI
+    ;             { 
+    ;                 Click down 
+    ;                 Sleep, 20  
+    ;                 Click up
+    ;                 Sleep, 20                 
+    ;                 Gui,Ae: Hide
+    ;                 sleep 200
+    ;                 Click 1
+    ;             }
+    ;     ; }
     return
 ; Double_Q 渲染输出
 ; #if WinActive("ahk_class Qt5QWindowIcon")
@@ -1299,7 +1348,6 @@ return
     if (keyPress=2){
             MsgBox 测试2
 	}
-
     return
 }
 ; Ae_Test:
@@ -1314,6 +1362,12 @@ return
     send {Tab}
     return
 }
+<Ae_Delete>:
+{
+    send,{Delete}
+    return
+}
+
 <Ae_UpDater>:
 Gui,Updating: +LastFound +AlwaysOnTop -Caption +ToolWindow
 Gui,Updating: Color, %color2%

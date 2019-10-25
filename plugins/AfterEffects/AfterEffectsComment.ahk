@@ -6,6 +6,39 @@ IniRead, Language, vimd.ini, config, Language
 ; 中英文分开 如果只是中文就在IF填写 可以无视else部分
 If Language=CN
 {
+;Plus
+    global _AERelinker="素材定位"
+    global _AeDynamicComp="共享合成"
+    global _AeAutoMatte="自动分层"
+    global _AeMaskTransformer="遮罩转换"
+    global _AeCompsitionOption="合成组设置"
+    global _AeSpriteOMatic="切图动画"
+    global _AeImmigrationREG = " 批量导入素材"
+    global _AeBatchReplaceFile = " 批量替换素材"
+    global _AeRENDER = "动作/方向"
+    global _AeNameRENDER = "名字/动作/方向"
+    global _AeNameDirection = " 名字/方向"
+    global _AeName = "名字"
+    global _AeRenderGarden = "RenderGarden "
+    global _AeProjectConver = "TSV转换"
+    global _AeSaveCompAsProject = "导出合成组"
+    global _AeCompDuplicator = "塌陷合成组"
+    global _AePropertiesToFxControls = "调节层控制"
+    global _AeBatchRename = "批量重命名"
+    global _AeBakeExpressionsKey = "表达式转关键帧"
+    global _AeFootageBatch= "素材批处理"
+
+    global _AeDeletePosition="X位置"
+    global _AeDeleteMask="X遮罩"
+    global _AeDeleteMark="X标记"
+    global _AeResetAll="重置所有"
+    global _AeDeleteKey="X帧"
+    global _AeDisableExpressions="禁用表达式"
+    global _AeEnableExpressions="开启表达式"
+    global _AeDeleteEff="X特效"
+    global _AeDeleteExp="X表达式"
+    global _AeAxis0="轴心0"
+
 ;定义注释
     vim.Comment("<AfterEffects_SwithMode>","切换模式")
     vim.Comment("<Ae_Open>","打开")
@@ -34,6 +67,7 @@ If Language=CN
     vim.Comment("<Ae_Double_h>", "隐藏|双击独立显示|长按锁定")
     vim.Comment("<Ae_Double_n>", "创建固态层|新建合成组|长按创建调节层")
 
+    vim.Comment("<Ae_Double_Tab>", "默认|双按搜索") 
     vim.Comment("<Ae_Double_F1>", "多功能F1|双按整理清理项目") 
     vim.Comment("<Ae_Double_F2>", "上一帧|双按第一帧") 
     vim.Comment("<Ae_Double_F3>", "下一帧|双第最后一帧") 

@@ -27,6 +27,7 @@ Menu, LangSet, add, English
 Menu, tray, add, (&L) %_Language%, :LangSet
 Menu, aboutMe, add, (&H) %_Help%, <VIMD_Help>
 Menu, aboutMe, add, (&U) %_Update%, <VIMD_Update>
+Menu, aboutMe, add, (&W) %_Web%, <VIMD_WorkFlowWeb>
 ; Menu, aboutMe, add, (&U) %_Update%, Check_Update
 
 Menu, aboutMe, add, (&B) %_BackupRestore%, <VIMD_BackupRestore>
@@ -109,11 +110,19 @@ Return
     run , %A_ScriptDir%\Editor.exe
 return
 
+<VIMD_WorkFlowWeb>:
+Run, https://github.com/BoBOVFX/Vimdesktop_BoBO
+return
+
 <VIMD_Help>:
 Run, https://www.kancloud.cn/funbobosky/vim_unity
 return
 
 <VIMD_Update>:
+; 先执行访问，后面在执行下面
+FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_已经帮你备份_%d%.ini ,1
+; FileCopy, %A_ScriptDir%\vimd.ini, %A_ScriptDir%\vimd_备份_还原.ini ,1
+Run, https://github.com/BoBOVFX/Vimdesktop_BoBO
 ; 执行备份文件
 ; d = (%A_YYYY%_%A_MM%_%A_DD%_%A_Hour%%A_Min%%A_Sec%)
 ; ; 执行备份文件
@@ -128,7 +137,7 @@ return
 ; Run, https://github.com/BoBOVFX/Vimdesktop
 ; Sleep, 2000
 ; Exitapp
-Gosub,Check_Update
+; Gosub,Check_Update
 return
 
 <VIMD_BackupRestore>:

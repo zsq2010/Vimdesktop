@@ -1,7 +1,7 @@
 ﻿    ;vim.Map("<F8>", "<AfterEffects_我的工具>", "AfterEffects")
     ;vim.Map("<Space>", "<HelloWorld>", "AfterEffects")
     ;vim.Map("<SP-q>", "<HelloWorld>", "AfterEffects")
-    vim.Map("<CapsLock>", "<Ae_Tab>", "AfterEffects")
+    vim.Map("<CapsLock>", "<Ae_Script_QuickMenu>", "AfterEffects")
     vim.Map("/0", "<Ae_Open>", "AfterEffects")
     vim.Map("/1", "<Ae_Save>", "AfterEffects")
     vim.Map("/2", "<Ae_SaveAs>", "AfterEffects")
@@ -25,7 +25,7 @@
     vim.Map("<F5>", "<AeSpace>", "AfterEffects") 
     
     vim.Map("<F6>", "<AfterEffects_优化合成时间>", "AfterEffects")            ;调用KeyBoard
-    vim.Map("<Tab>", "<Ae_Script_QuickMenu>", "AfterEffects")
+    vim.Map("<Tab>", "<Ae_Double_Tab>", "AfterEffects")
     vim.Map("<F8>1", "<Ae_Script_BoboTools>", "AfterEffects")  
     vim.Map("<F8>2", "<Ae_Script_CompSetter>", "AfterEffects") 
     vim.Map("<F8>3", "<Ae_Script_batchFootage>", "AfterEffects")
@@ -62,6 +62,7 @@
     vim.Map("0", "<Ae_Double_0>", "AfterEffects")
     vim.Map("1", "<Ae_Double_1>", "AfterEffects")
     vim.Map("2", "<Ae_Double_2>", "AfterEffects")
+    vim.Map("4", "<Ae_Delete>", "AfterEffects")
 
     vim.Map("8", "<Ae_Double_8>", "AfterEffects")
     vim.Map("-", "<Ae_Double_->", "AfterEffects")
@@ -109,7 +110,6 @@
     vim.Map("<SP-q>", "<Ae_Preset_Apply>", "AfterEffects")
     ; vim.Map("<SP-w>", "<Ae_key_vh>", "AfterEffects")
     vim.Map("<SP-i>", "<HelpAe>", "AfterEffects")
-    vim.Map("<SP-x>", "<Ae_Script_QuickMenu>", "AfterEffects")
 
     vim.Map("<SP-s>", "<Ae_SwitchLabel>", "AfterEffects")
     ; vim.Map("<~LS>", "<Ae_LShift>", "AfterEffects")

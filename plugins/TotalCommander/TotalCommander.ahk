@@ -4711,15 +4711,23 @@ return
 }
 
 
-<TC_Sub_azHistory>:
-{
+
+
+
+
+; 访问历史记录_Mod BoBO From capsEZ
+
+<TC_azHistory_Mod>:
+
     Global TC_azHistorySelect
 	;MaxItem := 36
 	;MaxItem := 10
 	MaxItem := 30
+
 	WinGet,exeName,ProcessName,A
 	WinGet,exeFullPath,ProcessPath,A
 	;D:\tools\totalcmd\TOTALCMD.EXE 正常多数是这种情况
+
 	if(SubStr(exeFullPath,2,2)!=":\")
 	{
 		WinGet,pid,PID,A
@@ -4791,51 +4799,101 @@ return
 		Menu, TC_azHistory, Show, %XN%, %YN%
     }
 return
-    TC_LeftRight()
+
+TC_azHistory_DeleteAll:
+	Menu, TC_azHistory, DeleteAll
+return
+
+azHistory_Select:
+	Global TC_azHistorySelect
+    Value := TC_azHistorySelect[A_ThisMenuItemPos]
+    If RegExMatch(Value, "^::")
     {
-        Location := 0
-        ControlGetPos,x1,y1,,,%TCPanel1%,AHK_CLASS TTOTAL_CMD
-        If x1 > %y1%
-            location += 2
-        ControlGetFocus,TLB,ahk_class TTOTAL_CMD
-        ControlGetPos,x2,y2,wn,,%TLB%,ahk_class TTOTAL_CMD
-        If location
-        {
-            If x1 > %x2%
-                location += 1
-        }
-        Else
-        {
-            If y1 > %y2%
-                location += 1
-        }
-        Return location
+        If RegExMatch(Value, "::\{20D04FE0\-3AEA\-1069\-A2D8\-08002B30309D\}")
+            Number := CM_OpenDrives
+        Else If RegExMatch(Value, "::(?!\{)")
+            Number := CM_OpenDesktop
+        Else If RegExMatch(Value, "::\{21EC2020\-3AEA\-1069\-A2DD\-08002B30309D\}\\::\{2227A280\-3AEA\-1069\-A2DE\-08002B30309D\}")
+		    Number := cm_OpenPrinters
+	    Else If RegExMatch(Value, "::\{F02C1A0D\-BE21\-4350\-88B0\-7367FC96EF3C\}")
+		    Number := cm_OpenNetwork
+        Else If RegExMatch(Value, "::\{26EE0668\-A00A\-44D7\-9371\-BEB064C98683\}\\0")
+		    Number := cm_OpenControls
+	    Else If RegExMatch(Value, "::\{645FF040\-5081\-101B\-9F08\-00AA002F954E\}")
+		    Number := cm_OpenRecycled
+        PostMessage, %TC_Msg%, %Number%, 0, , AHK_CLASS TTOTAL_CMD
     }
-}
+    Else
+    {
+        ThisMenuItem := RegExReplace(Value,"\t.*$")
+        WinGet, ExeName, ProcessName, ahk_class TTOTAL_CMD
+		ControlSetText, Edit1, cd %ThisMenuItem%, ahk_class TTOTAL_CMD
+		ControlSend, Edit1, {enter}, ahk_class TTOTAL_CMD
+    }
+return
 
-
-
-
-;-------------Tc函数----------------------------------
-;作用:同步滚动TC左右面板
-Tc_WindowScroll(Direction)
+TC_LeftRight()
 {
-    loop,3
-    {
-        SendMessage,0x115,%Direction%,0,TMyListBox1
-        SendMessage,0x115,%Direction%,0,TMyListBox2
-    }
+	Location := 0
+	ControlGetPos,x1,y1,,,%TCPanel1%,AHK_CLASS TTOTAL_CMD
+	If x1 > %y1%
+		location += 2
+	ControlGetFocus,TLB,ahk_class TTOTAL_CMD
+	ControlGetPos,x2,y2,wn,,%TLB%,ahk_class TTOTAL_CMD
+	If location
+	{
+		If x1 > %x2%
+			location += 1
+	}
+	Else
+	{
+		If y1 > %y2%
+			location += 1
+	}
+	Return location
 }
-;-----------------------------------------------------
-#If GetKeyState(N3.keys,"p") AND WinActive("ahk_exe Totalcmd.exe") ;## 
-w::
-	N3.ST() ;## 
-    Tc_WindowScroll(0)
-return
-s::
-	N3.ST() ;## 
-    Tc_WindowScroll(1)
-return
+
+; 访问历史记录_Mod BoBO From capsEZ
+
+<TC_AltSwitch>:
+{   
+	keyPress:=analyseKeyPress()
+	if (keyPress=1){
+         GoSub,<cm_DirectoryHotlist>
+         return
+	}
+    ; if (keyPress=2){
+    ;     return
+	; }
+    if (keyPress=2){
+        GoSub,<TC_azHistory_Mod>
+        return
+	}
+    return
+}
 
 
-#If ;## 语境约束结束
+
+; ;-------------Tc函数----------------------------------
+; ;作用:同步滚动TC左右面板
+; Tc_WindowScroll(Direction)
+; {
+;     loop,3
+;     {
+;         SendMessage,0x115,%Direction%,0,TMyListBox1
+;         SendMessage,0x115,%Direction%,0,TMyListBox2
+;     }
+; }
+; ;-----------------------------------------------------
+; #If GetKeyState(N3.keys,"p") AND WinActive("ahk_exe Totalcmd.exe") ;## 
+; w::
+; 	N3.ST() ;## 
+;     Tc_WindowScroll(0)
+; return
+; s::
+; 	N3.ST() ;## 
+;     Tc_WindowScroll(1)
+; return
+
+
+; #If ;## 语境约束结束

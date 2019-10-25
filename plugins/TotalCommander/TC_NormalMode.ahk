@@ -1,8 +1,9 @@
 ﻿  ;重定义以下Sace，让Sace不被禁用   
     vim.map("<Space>", "<Tc_DoubleSpace>", "TTOTAL_CMD")  ;选中取消
-    vim.map("<Alt>", "<cm_DirectoryHotlist>", "TTOTAL_CMD")  ;收藏夹
-    vim.map("<BS>", "<TC_Double_Backspace>", "TTOTAL_CMD")  ;收藏夹
-    ;vim.map("<CapsLock>", "<cm_DirectoryHotlist>", "TTOTAL_CMD")  ;收藏夹
+    vim.map("<Alt>", "<TC_AltSwitch>", "TTOTAL_CMD")  ;收藏夹/双按访问历史记录
+    ; vim.map("<Alt>", "<cm_DirectoryHotlist>", "TTOTAL_CMD")  ;收藏夹
+    vim.map("<BS>", "<TC_Double_Backspace>", "TTOTAL_CMD")  ;上一层
+    ;vim.map("<CapsLock>", "<cm_DirectoryHotlist>", "TTOTAL_CMD")  ;
     ;vim.map("<LCtrl>", "<TC_GoToParentEx>", "TTOTAL_CMD")  ;上一层
 ;根据原来这些数字键下方键对应的功能与系统原生快捷键设置的
 
@@ -20,11 +21,12 @@
     vim.map("0", "<cm_MkDir>", "TTOTAL_CMD")  ;新建文件夹
     vim.map("<F1>", "<TC_double_Compare>", "TTOTAL_CMD")  ;比较
     vim.map("<F4>", "<TC_SwitchF4>", "TTOTAL_CMD")
-    vim.map("<F5>", "<TC_GotoAe>", "TTOTAL_CMD") ;一键到AE
+    ; vim.map("<F5>", "<TC_GotoAe>", "TTOTAL_CMD") ;一键到AE
     vim.map("<F2>", "<TC_double_F2>", "TTOTAL_CMD") ;
     vim.map("<F11>", "<TC_SwitchWindows>", "TTOTAL_CMD")  ;切换窗口
     vim.map("/", "<cm_ShowQuickSearch>", "TTOTAL_CMD")  ;
     ; vim.map("<SP-1>", "<TC_To7zip>", "TTOTAL_CMD")
+    vim.map("<SP-1>", "<TC_azHistory_Mod>", "TTOTAL_CMD")
     vim.map("<SP-4>", "<Home>", "TTOTAL_CMD")
     vim.map("<SP-0>", "<End>", "TTOTAL_CMD")
     vim.map("<SP-a>", "<TC_CreateNewFile>", "TTOTAL_CMD")
@@ -47,7 +49,6 @@
     vim.map("<SP-;>", "<cm_List>", "TTOTAL_CMD") ;弹窗预览i
 	vim.map("<SP-'>", "<cm_EditPath>", "TTOTAL_CMD")
 	vim.map("<SP-'>", "<cm_FocusCmdLine>", "TTOTAL_CMD") ;"
-    vim.map("0", "<TC_Sub_azHistory>", "TTOTAL_CMD") ;"
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     vim.map("<F9>1", "<TC_TCIMG_RenAddDateTime>", "TTOTAL_CMD")
     vim.map("<F9>2", "<TC_TCIMG_DirGetUp>", "TTOTAL_CMD") ;"
