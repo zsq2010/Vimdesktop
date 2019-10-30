@@ -115,8 +115,8 @@
     ; vim.Map("<~LS>", "<Ae_LShift>", "AfterEffects")
     ; vim.Map("<~LC>", "<Ae_FXConsole>", "AfterEffects")
 ; Ctrl&Shift相关
-    vim.Map("<Ctrl>", "<Ae_Double_Ctrl>", "AfterEffects")
-    vim.Map("<Shift>", "<Ae_Double_Shift>", "AfterEffects")
+    ; vim.Map("<Ctrl>", "<Ae_Double_Ctrl>", "AfterEffects")
+    ; vim.Map("<Shift>", "<Ae_Double_Shift>", "AfterEffects")
     vim.Map("<Space>", "<AeSpace>", "AfterEffects") 
     ;vim.Map("<C-c>", "<Ae_CopyPaste>", "AfterEffects")
     ; vim.Map("<C-LButton>", "<AeSpace>", "AfterEffects")

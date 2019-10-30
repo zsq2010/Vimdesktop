@@ -387,7 +387,7 @@ return
         }
     else
         {
-            Send, {F4}
+            getAeScript("custom\ae_scripts\add_keys.jsx")
             return
         }
 return
