@@ -643,15 +643,16 @@ Return
     return
 
     ae_tappedkey_2:
-        If ProcessExist("TOTALCMD.exe"){
-            getAeScript("custom\ae_scripts\commands\RevealInFinderTC.jsx")
-        }else{
-            getAeScript("custom\ae_scripts\commands\RevealInFinder.jsx")
-        }
+        ; If ProcessExist("TOTALCMD.exe"){
+        ;     getAeScript("custom\ae_scripts\commands\RevealInFinderTC.jsx")
+        ; }else{
+        ;     getAeScript("custom\ae_scripts\commands\RevealInFinder.jsx")
+        ; }
+        send,{RButton}
     return
 
     ae_double_2:
-    send,2
+        ; send,{RButton}
     return
 
 }
